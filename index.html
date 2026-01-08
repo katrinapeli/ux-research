@@ -3,1487 +3,1604 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>UX Research Portfolio - VirtualCare & NISRA</title>
+    <title>UX Research Case Study | NISRA Web Accessibility</title>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,700;1,9..40,400&family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700;1,9..144,400&display=swap" rel="stylesheet">
     <style>
+        :root {
+            --bg-primary: #0a0a0f;
+            --bg-secondary: #12121a;
+            --bg-card: #1a1a24;
+            --accent-coral: #ff6b5b;
+            --accent-lavender: #a78bfa;
+            --accent-mint: #6ee7b7;
+            --accent-amber: #fbbf24;
+            --text-primary: #f8fafc;
+            --text-secondary: #94a3b8;
+            --text-muted: #64748b;
+            --border-subtle: rgba(255,255,255,0.08);
+            --gradient-coral: linear-gradient(135deg, #ff6b5b 0%, #ff8f7a 100%);
+            --gradient-lavender: linear-gradient(135deg, #a78bfa 0%, #c4b5fd 100%);
+            --gradient-mint: linear-gradient(135deg, #6ee7b7 0%, #a7f3d0 100%);
+        }
+
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
-        
+
+        html {
+            scroll-behavior: smooth;
+        }
+
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
-            background: #f5f7fa;
-            overflow: hidden;
+            font-family: 'DM Sans', sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.7;
+            overflow-x: hidden;
         }
-        
-        .presentation-container {
-            width: 100vw;
-            height: 100vh;
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .slide {
-            width: 100%;
-            height: 100%;
-            position: absolute;
+
+        /* Navigation */
+        .nav {
+            position: fixed;
             top: 0;
             left: 0;
-            opacity: 0;
-            transform: translateX(100%);
-            transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+            right: 0;
+            z-index: 1000;
+            padding: 1rem 2rem;
+            background: rgba(10, 10, 15, 0.85);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border-subtle);
+        }
+
+        .nav-inner {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .nav-logo {
+            font-family: 'Fraunces', serif;
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .nav-link {
+            padding: 0.5rem 1rem;
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+            text-decoration: none;
+            border-radius: 6px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .nav-link:hover, .nav-link.active {
+            color: var(--text-primary);
+            background: var(--bg-card);
+        }
+
+        /* Slide Container */
+        .slides-container {
+            padding-top: 60px;
+        }
+
+        .slide {
+            min-height: 100vh;
+            padding: 6rem 2rem;
             display: flex;
             align-items: center;
             justify-content: center;
-            padding: 60px;
-            overflow-y: auto;
+            opacity: 0;
+            transform: translateY(40px);
+            transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
         }
-        
-        .slide.active {
+
+        .slide.visible {
             opacity: 1;
-            transform: translateX(0);
-            z-index: 10;
+            transform: translateY(0);
         }
-        
-        .slide.prev {
-            transform: translateX(-100%);
-        }
-        
-        /* Blob backgrounds */
-        .blob {
-            position: fixed;
-            border-radius: 40% 60% 70% 30% / 40% 50% 60% 50%;
-            animation: morph 8s ease-in-out infinite;
-            z-index: 0;
-            opacity: 0.7;
-            pointer-events: none;
-        }
-        
-        @keyframes morph {
-            0%, 100% {
-                border-radius: 40% 60% 70% 30% / 40% 50% 60% 50%;
-                transform: rotate(0deg);
-            }
-            25% {
-                border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%;
-                transform: rotate(90deg);
-            }
-            50% {
-                border-radius: 30% 60% 70% 40% / 50% 60% 30% 60%;
-                transform: rotate(180deg);
-            }
-            75% {
-                border-radius: 70% 30% 40% 60% / 40% 70% 50% 30%;
-                transform: rotate(270deg);
-            }
-        }
-        
-        .blob-1 {
-            width: 400px;
-            height: 400px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            top: -100px;
-            right: -100px;
-        }
-        
-        .blob-2 {
-            width: 300px;
-            height: 300px;
-            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-            bottom: -80px;
-            left: -80px;
-            animation-delay: -2s;
-        }
-        
-        .blob-3 {
-            width: 250px;
-            height: 250px;
-            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
-            top: 50%;
-            left: -50px;
-            animation-delay: -4s;
-        }
-        
-        /* Slide content */
+
         .slide-content {
-            position: relative;
-            z-index: 1;
             max-width: 1200px;
             width: 100%;
         }
-        
-        /* Title Slide */
-        .title-slide {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            text-align: center;
-        }
-        
-        .title-slide h1 {
-            font-size: 64px;
-            margin-bottom: 20px;
-            animation: fadeInUp 0.8s ease;
-        }
-        
-        .title-slide h2 {
-            font-size: 32px;
-            opacity: 0.9;
-            font-weight: 300;
-            margin-bottom: 40px;
-            animation: fadeInUp 0.8s ease 0.2s both;
-        }
-        
-        .title-slide .author {
-            font-size: 20px;
-            margin-top: 40px;
-            animation: fadeInUp 0.8s ease 0.4s both;
-        }
-        
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-        
-        /* About Me Slide */
-        .about-content {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 50px;
-            align-items: center;
-        }
-        
-        .about-text h3 {
-            font-size: 36px;
-            color: #667eea;
-            margin-bottom: 25px;
-        }
-        
-        .about-text p {
-            font-size: 18px;
-            line-height: 1.8;
-            color: #555;
-            margin-bottom: 20px;
-        }
-        
-        .credentials {
-            background: white;
-            padding: 30px;
-            border-radius: 20px;
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
-            margin-top: 30px;
-        }
-        
-        .credentials h4 {
-            color: #2c3e50;
-            font-size: 18px;
-            margin-bottom: 15px;
-        }
-        
-        .credentials ul {
-            list-style: none;
-            padding: 0;
-        }
-        
-        .credentials li {
-            padding: 10px 0;
-            padding-left: 25px;
-            position: relative;
-            color: #555;
-            font-size: 15px;
-        }
-        
-        .credentials li::before {
-            content: '•';
-            position: absolute;
-            left: 0;
-            color: #667eea;
-            font-weight: bold;
-            font-size: 20px;
-        }
-        
-        .skills-section {
-            background: white;
-            padding: 40px;
-            border-radius: 20px;
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
-        }
-        
-        .skills-section h4 {
-            color: #2c3e50;
-            font-size: 20px;
-            margin-bottom: 20px;
-            text-align: center;
-        }
-        
-        .skills-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 25px;
-        }
-        
-        .skill-category {
-            background: #f8f9fa;
-            padding: 20px;
-            border-radius: 12px;
-            border-left: 4px solid #667eea;
-        }
-        
-        .skill-category h5 {
-            color: #667eea;
-            font-size: 14px;
-            margin-bottom: 12px;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-        
-        .skill-category ul {
-            list-style: none;
-            padding: 0;
-        }
-        
-        .skill-category li {
-            font-size: 14px;
-            color: #555;
-            padding: 6px 0;
-        }
-        
-        /* Stats Grid */
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 25px;
-            margin-top: 40px;
-        }
-        
-        .stat-card {
-            background: white;
-            padding: 35px 25px;
-            border-radius: 20px;
-            text-align: center;
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
-            transition: all 0.3s ease;
-            animation: scaleIn 0.5s ease forwards;
-            opacity: 0;
-        }
-        
-        .stat-card:nth-child(1) { animation-delay: 0.1s; }
-        .stat-card:nth-child(2) { animation-delay: 0.2s; }
-        .stat-card:nth-child(3) { animation-delay: 0.3s; }
-        .stat-card:nth-child(4) { animation-delay: 0.4s; }
-        
-        @keyframes scaleIn {
-            from {
-                opacity: 0;
-                transform: scale(0.8);
-            }
-            to {
-                opacity: 1;
-                transform: scale(1);
-            }
-        }
-        
-        .stat-card:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 15px 50px rgba(0, 0, 0, 0.15);
-        }
-        
-        .stat-number {
-            font-size: 48px;
-            font-weight: 700;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            margin-bottom: 10px;
-        }
-        
-        .stat-label {
-            font-size: 13px;
-            color: #7f8c8d;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-        
-        /* Content Slide */
-        .content-slide h2 {
-            font-size: 48px;
-            color: #2c3e50;
-            margin-bottom: 30px;
-        }
-        
-        .content-slide h3 {
-            font-size: 28px;
-            color: #667eea;
-            margin-top: 30px;
-            margin-bottom: 15px;
-        }
-        
-        .content-slide p {
-            font-size: 18px;
-            line-height: 1.8;
-            color: #555;
-            margin-bottom: 20px;
-        }
-        
-        /* Two Column Layout */
-        .two-column {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 40px;
-            align-items: start;
-        }
-        
-        /* Card */
-        .info-card {
-            background: white;
-            padding: 30px;
-            border-radius: 20px;
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
-            margin-bottom: 20px;
-        }
-        
-        .info-card h4 {
-            color: #667eea;
-            font-size: 20px;
-            margin-bottom: 15px;
-        }
-        
-        .info-card ul {
-            list-style: none;
-            padding: 0;
-        }
-        
-        .info-card li {
-            padding: 10px 0;
-            padding-left: 30px;
-            position: relative;
-            color: #555;
-            font-size: 16px;
-        }
-        
-        .info-card li::before {
-            content: '✓';
-            position: absolute;
-            left: 0;
-            color: #2ecc71;
-            font-weight: bold;
-            font-size: 18px;
-        }
-        
-        /* Quote */
-        .quote {
-            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-            color: white;
-            padding: 30px 40px;
-            border-radius: 20px;
-            font-style: italic;
-            font-size: 20px;
-            margin: 30px 0;
-            position: relative;
-            box-shadow: 0 10px 30px rgba(240, 147, 251, 0.3);
-        }
-        
-        .quote::before {
-            content: '"';
-            font-size: 80px;
-            position: absolute;
-            top: -20px;
-            left: 20px;
-            opacity: 0.3;
-        }
-        
-        /* Chart Visualization */
-        .chart-container {
-            background: white;
-            padding: 30px;
-            border-radius: 20px;
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
-            margin: 30px 0;
-        }
-        
-        .chart-container h3 {
-            margin-bottom: 25px;
-            color: #2c3e50;
-            font-size: 22px;
-        }
-        
-        .bar-chart {
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-        }
-        
-        .bar-item {
+
+        /* Hero Section */
+        .hero {
+            min-height: 100vh;
             display: flex;
             align-items: center;
-            gap: 15px;
-        }
-        
-        .bar-label {
-            min-width: 150px;
-            font-weight: 600;
-            color: #2c3e50;
-            font-size: 15px;
-        }
-        
-        .bar-bg {
-            flex: 1;
-            height: 40px;
-            background: #ecf0f1;
-            border-radius: 10px;
             position: relative;
             overflow: hidden;
         }
-        
-        .bar-fill {
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -20%;
+            width: 80%;
+            height: 150%;
+            background: radial-gradient(ellipse at center, rgba(167, 139, 250, 0.08) 0%, transparent 60%);
+            pointer-events: none;
+        }
+
+        .hero::after {
+            content: '';
+            position: absolute;
+            bottom: -30%;
+            left: -10%;
+            width: 60%;
             height: 100%;
-            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
-            border-radius: 10px;
-            display: flex;
+            background: radial-gradient(ellipse at center, rgba(255, 107, 91, 0.06) 0%, transparent 50%);
+            pointer-events: none;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero-eyebrow {
+            display: inline-flex;
             align-items: center;
-            justify-content: flex-end;
-            padding-right: 15px;
-            color: white;
-            font-weight: 700;
-            animation: fillBar 1.5s ease-in-out forwards;
-            width: 0;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            background: var(--bg-card);
+            border-radius: 100px;
+            font-size: 0.875rem;
+            color: var(--accent-lavender);
+            margin-bottom: 2rem;
+            border: 1px solid var(--border-subtle);
         }
-        
-        @keyframes fillBar {
-            to {
-                width: var(--width);
-            }
-        }
-        
-        /* Navigation */
-        .nav-buttons {
-            position: fixed;
-            bottom: 40px;
-            left: 50%;
-            transform: translateX(-50%);
-            display: flex;
-            gap: 20px;
-            z-index: 100;
-        }
-        
-        .nav-btn {
-            width: 60px;
-            height: 60px;
-            background: white;
-            border: none;
+
+        .hero-eyebrow::before {
+            content: '';
+            width: 8px;
+            height: 8px;
+            background: var(--accent-lavender);
             border-radius: 50%;
-            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
-            cursor: pointer;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        .hero-title {
+            font-family: 'Fraunces', serif;
+            font-size: clamp(2.5rem, 6vw, 4.5rem);
+            font-weight: 700;
+            line-height: 1.1;
+            margin-bottom: 1.5rem;
+            letter-spacing: -0.02em;
+        }
+
+        .hero-title .highlight {
+            background: var(--gradient-coral);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero-subtitle {
+            font-size: 1.25rem;
+            color: var(--text-secondary);
+            max-width: 600px;
+            margin-bottom: 3rem;
+        }
+
+        /* Stats Row */
+        .stats-row {
+            display: flex;
+            gap: 3rem;
+            flex-wrap: wrap;
+        }
+
+        .stat-item {
+            display: flex;
+            flex-direction: column;
+            gap: 0.25rem;
+        }
+
+        .stat-value {
+            font-family: 'Fraunces', serif;
+            font-size: 2.5rem;
+            font-weight: 700;
+            background: var(--gradient-mint);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .stat-label {
+            font-size: 0.875rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+
+        /* Section Headers */
+        .section-header {
+            margin-bottom: 4rem;
+        }
+
+        .section-number {
+            font-family: 'Fraunces', serif;
+            font-size: 0.875rem;
+            color: var(--accent-coral);
+            margin-bottom: 1rem;
+            display: block;
+        }
+
+        .section-title {
+            font-family: 'Fraunces', serif;
+            font-size: clamp(2rem, 4vw, 3rem);
+            font-weight: 600;
+            margin-bottom: 1rem;
+            line-height: 1.2;
+        }
+
+        .section-desc {
+            font-size: 1.125rem;
+            color: var(--text-secondary);
+            max-width: 700px;
+        }
+
+        /* Overview Grid */
+        .overview-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin-top: 3rem;
+        }
+
+        .overview-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-subtle);
+            border-radius: 16px;
+            padding: 2rem;
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .overview-card:hover {
+            transform: translateY(-4px);
+            border-color: rgba(255,255,255,0.15);
+            box-shadow: 0 20px 40px -20px rgba(0,0,0,0.5);
+        }
+
+        .overview-card-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
             display: flex;
             align-items: center;
             justify-content: center;
-            transition: all 0.3s ease;
-            font-size: 24px;
-            color: #667eea;
+            font-size: 1.5rem;
+            margin-bottom: 1.5rem;
         }
-        
-        .nav-btn:hover {
-            background: #667eea;
-            color: white;
-            transform: scale(1.1);
+
+        .overview-card-icon.coral { background: rgba(255, 107, 91, 0.15); }
+        .overview-card-icon.lavender { background: rgba(167, 139, 250, 0.15); }
+        .overview-card-icon.mint { background: rgba(110, 231, 183, 0.15); }
+        .overview-card-icon.amber { background: rgba(251, 191, 36, 0.15); }
+
+        .overview-card-title {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--text-muted);
+            margin-bottom: 0.5rem;
         }
-        
-        .nav-btn:disabled {
-            opacity: 0.3;
-            cursor: not-allowed;
+
+        .overview-card-value {
+            font-size: 1.125rem;
+            font-weight: 500;
         }
-        
-        /* Slide counter */
-        .slide-counter {
-            position: fixed;
-            top: 40px;
-            right: 40px;
-            background: white;
-            padding: 15px 25px;
-            border-radius: 30px;
-            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
-            z-index: 100;
-            font-weight: 600;
-            color: #667eea;
-        }
-        
-        /* Process Steps */
-        .process-steps {
+
+        /* Process Timeline */
+        .process-timeline {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
-            gap: 20px;
-            margin: 40px 0;
+            gap: 2rem;
+            margin-top: 3rem;
         }
-        
-        .step {
-            background: white;
-            padding: 30px 20px;
-            border-radius: 15px;
-            text-align: center;
-            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+
+        .process-step {
+            position: relative;
+            padding: 2rem;
+            background: var(--bg-card);
+            border: 1px solid var(--border-subtle);
+            border-radius: 16px;
+            transition: all 0.4s ease;
+        }
+
+        .process-step::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            right: -2rem;
+            width: 2rem;
+            height: 2px;
+            background: var(--border-subtle);
+        }
+
+        .process-step:last-child::before {
+            display: none;
+        }
+
+        .process-step:hover {
+            border-color: var(--accent-lavender);
+            transform: translateY(-4px);
+        }
+
+        .process-phase {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            background: rgba(167, 139, 250, 0.15);
+            color: var(--accent-lavender);
+            border-radius: 100px;
+            font-size: 0.75rem;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 1rem;
+        }
+
+        .process-title {
+            font-family: 'Fraunces', serif;
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 0.75rem;
+        }
+
+        .process-methods {
+            list-style: none;
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+        }
+
+        .process-methods li {
+            padding: 0.25rem 0;
+            padding-left: 1.25rem;
             position: relative;
         }
-        
-        .step-number {
-            width: 50px;
-            height: 50px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            border-radius: 50%;
+
+        .process-methods li::before {
+            content: '→';
+            position: absolute;
+            left: 0;
+            color: var(--accent-coral);
+        }
+
+        /* Challenges Grid */
+        .challenges-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .challenge-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-subtle);
+            border-radius: 16px;
+            padding: 2rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .challenge-card::before {
+            content: attr(data-number);
+            position: absolute;
+            top: 1rem;
+            right: 1.5rem;
+            font-family: 'Fraunces', serif;
+            font-size: 4rem;
+            font-weight: 700;
+            color: rgba(255,255,255,0.03);
+        }
+
+        .challenge-icon {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        .challenge-title {
+            font-family: 'Fraunces', serif;
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: var(--accent-coral);
+        }
+
+        .challenge-desc {
+            font-size: 0.9375rem;
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+
+        /* Research Methods */
+        .methods-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .method-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-subtle);
+            border-radius: 16px;
+            padding: 2.5rem;
+            display: grid;
+            grid-template-columns: auto 1fr;
+            gap: 2rem;
+            align-items: start;
+            transition: all 0.4s ease;
+        }
+
+        .method-card:hover {
+            border-color: rgba(255,255,255,0.15);
+        }
+
+        .method-number {
+            font-family: 'Fraunces', serif;
+            font-size: 3rem;
+            font-weight: 700;
+            color: var(--accent-lavender);
+            line-height: 1;
+        }
+
+        .method-content h3 {
+            font-family: 'Fraunces', serif;
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 0.75rem;
+        }
+
+        .method-content p {
+            font-size: 0.9375rem;
+            color: var(--text-secondary);
+            margin-bottom: 1.5rem;
+        }
+
+        .method-details {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+
+        .method-tag {
+            padding: 0.375rem 0.75rem;
+            background: var(--bg-secondary);
+            border-radius: 6px;
+            font-size: 0.8125rem;
+            color: var(--text-secondary);
+        }
+
+        /* Findings Section */
+        .findings-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 3rem;
+            margin-top: 3rem;
+        }
+
+        .finding-column {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .finding-item {
+            background: var(--bg-card);
+            border: 1px solid var(--border-subtle);
+            border-radius: 12px;
+            padding: 1.5rem;
+        }
+
+        .finding-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .finding-status {
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 24px;
-            font-weight: 700;
-            margin: 0 auto 15px;
+            font-size: 1rem;
         }
-        
-        .step h4 {
-            color: #2c3e50;
-            font-size: 16px;
-            margin-bottom: 10px;
+
+        .finding-status.fail {
+            background: rgba(255, 107, 91, 0.15);
         }
-        
-        .step p {
-            font-size: 13px;
-            color: #7f8c8d;
+
+        .finding-status.pass {
+            background: rgba(110, 231, 183, 0.15);
         }
-        
-        /* Highlight box */
-        .highlight-box {
-            background: linear-gradient(135deg, #fff8e1 0%, #ffecb3 100%);
-            border-left: 4px solid #ffa726;
-            padding: 25px;
-            border-radius: 10px;
-            margin: 25px 0;
+
+        .finding-title {
+            font-weight: 600;
+            font-size: 1rem;
         }
-        
-        .highlight-box strong {
-            color: #f57c00;
+
+        .finding-detail {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
         }
-        
-        /* Success box */
-        .success-box {
-            background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%);
-            border-left: 4px solid #66bb6a;
-            padding: 25px;
-            border-radius: 10px;
-            margin: 25px 0;
+
+        .finding-metric {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 1rem;
+            border-top: 1px solid var(--border-subtle);
+            margin-top: 1rem;
         }
-        
-        .success-box strong {
-            color: #2e7d32;
+
+        .metric-label {
+            font-size: 0.8125rem;
+            color: var(--text-muted);
         }
-        
-        /* Divider */
-        .divider-section {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
+
+        .metric-value {
+            font-family: 'Fraunces', serif;
+            font-weight: 600;
+        }
+
+        .metric-value.fail {
+            color: var(--accent-coral);
+        }
+
+        .metric-value.pass {
+            color: var(--accent-mint);
+        }
+
+        /* Quote Block */
+        .quote-block {
+            background: linear-gradient(135deg, rgba(167, 139, 250, 0.1) 0%, rgba(110, 231, 183, 0.05) 100%);
+            border: 1px solid var(--border-subtle);
+            border-radius: 20px;
+            padding: 3rem;
+            margin: 3rem 0;
+            position: relative;
+        }
+
+        .quote-block::before {
+            content: '"';
+            font-family: 'Fraunces', serif;
+            font-size: 6rem;
+            color: var(--accent-lavender);
+            opacity: 0.3;
+            position: absolute;
+            top: 1rem;
+            left: 2rem;
+            line-height: 1;
+        }
+
+        .quote-text {
+            font-family: 'Fraunces', serif;
+            font-size: 1.5rem;
+            font-style: italic;
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .quote-author {
+            font-size: 0.875rem;
+            color: var(--text-muted);
+        }
+
+        /* Solutions Grid */
+        .solutions-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .solution-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-subtle);
+            border-radius: 16px;
+            padding: 2rem;
+            transition: all 0.4s ease;
+        }
+
+        .solution-card:hover {
+            transform: translateY(-4px);
+            border-color: var(--accent-mint);
+        }
+
+        .solution-icon {
+            width: 56px;
+            height: 56px;
+            border-radius: 12px;
+            background: rgba(110, 231, 183, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .solution-title {
+            font-family: 'Fraunces', serif;
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 0.75rem;
+        }
+
+        .solution-desc {
+            font-size: 0.9375rem;
+            color: var(--text-secondary);
+            margin-bottom: 1.5rem;
+        }
+
+        .solution-before-after {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            padding-top: 1rem;
+            border-top: 1px solid var(--border-subtle);
+        }
+
+        .ba-item {
             text-align: center;
-            padding: 80px 60px;
         }
-        
-        .divider-section h1 {
-            font-size: 56px;
-            margin-bottom: 20px;
+
+        .ba-label {
+            font-size: 0.6875rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--text-muted);
+            margin-bottom: 0.25rem;
         }
-        
-        .divider-section p {
-            font-size: 22px;
-            opacity: 0.9;
+
+        .ba-value {
+            font-family: 'Fraunces', serif;
+            font-size: 1.125rem;
+            font-weight: 600;
         }
-        
+
+        .ba-value.before {
+            color: var(--accent-coral);
+        }
+
+        .ba-value.after {
+            color: var(--accent-mint);
+        }
+
+        /* Collaboration Section */
+        .collab-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 3rem;
+            margin-top: 3rem;
+        }
+
+        .collab-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-subtle);
+            border-radius: 16px;
+            padding: 2.5rem;
+        }
+
+        .collab-role {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            background: var(--bg-secondary);
+            border-radius: 100px;
+            font-size: 0.875rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .collab-role-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+        }
+
+        .collab-role-dot.coral { background: var(--accent-coral); }
+        .collab-role-dot.lavender { background: var(--accent-lavender); }
+
+        .collab-title {
+            font-family: 'Fraunces', serif;
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+
+        .collab-activities {
+            list-style: none;
+        }
+
+        .collab-activities li {
+            padding: 0.75rem 0;
+            border-bottom: 1px solid var(--border-subtle);
+            font-size: 0.9375rem;
+            color: var(--text-secondary);
+            display: flex;
+            align-items: flex-start;
+            gap: 0.75rem;
+        }
+
+        .collab-activities li:last-child {
+            border-bottom: none;
+        }
+
+        .collab-activities li::before {
+            content: '✓';
+            color: var(--accent-mint);
+            font-weight: 600;
+        }
+
+        /* Results Section */
+        .results-hero {
+            background: linear-gradient(135deg, var(--bg-card) 0%, var(--bg-secondary) 100%);
+            border: 1px solid var(--border-subtle);
+            border-radius: 24px;
+            padding: 4rem;
+            text-align: center;
+            margin-top: 3rem;
+        }
+
+        .results-stats {
+            display: flex;
+            justify-content: center;
+            gap: 6rem;
+            margin-bottom: 3rem;
+        }
+
+        .result-stat {
+            text-align: center;
+        }
+
+        .result-stat-value {
+            font-family: 'Fraunces', serif;
+            font-size: 4rem;
+            font-weight: 700;
+            line-height: 1;
+            margin-bottom: 0.5rem;
+        }
+
+        .result-stat-value.coral {
+            background: var(--gradient-coral);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .result-stat-value.mint {
+            background: var(--gradient-mint);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .result-stat-value.lavender {
+            background: var(--gradient-lavender);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .result-stat-label {
+            font-size: 0.875rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+
+        .results-feedback {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .feedback-card {
+            background: var(--bg-secondary);
+            border-radius: 12px;
+            padding: 2rem;
+            text-align: left;
+        }
+
+        .feedback-text {
+            font-family: 'Fraunces', serif;
+            font-size: 1.125rem;
+            font-style: italic;
+            margin-bottom: 1rem;
+        }
+
+        .feedback-source {
+            font-size: 0.8125rem;
+            color: var(--text-muted);
+        }
+
+        /* Learnings Grid */
+        .learnings-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .learning-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-subtle);
+            border-radius: 16px;
+            padding: 2rem;
+        }
+
+        .learning-icon {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        .learning-title {
+            font-family: 'Fraunces', serif;
+            font-size: 1.125rem;
+            font-weight: 600;
+            margin-bottom: 0.75rem;
+        }
+
+        .learning-desc {
+            font-size: 0.9375rem;
+            color: var(--text-secondary);
+        }
+
+        /* Tools Section */
+        .tools-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        .tool-tag {
+            padding: 0.75rem 1.5rem;
+            background: var(--bg-card);
+            border: 1px solid var(--border-subtle);
+            border-radius: 100px;
+            font-size: 0.9375rem;
+            transition: all 0.3s ease;
+        }
+
+        .tool-tag:hover {
+            border-color: var(--accent-lavender);
+            transform: translateY(-2px);
+        }
+
+        /* Slide Navigation */
+        .slide-nav {
+            position: fixed;
+            right: 2rem;
+            top: 50%;
+            transform: translateY(-50%);
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+            z-index: 100;
+        }
+
+        .slide-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: var(--bg-card);
+            border: 2px solid var(--border-subtle);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .slide-dot:hover {
+            border-color: var(--accent-lavender);
+        }
+
+        .slide-dot.active {
+            background: var(--accent-lavender);
+            border-color: var(--accent-lavender);
+        }
+
         /* Responsive */
-        @media (max-width: 768px) {
-            .slide {
-                padding: 30px 20px;
-            }
-            
-            .title-slide h1 {
-                font-size: 36px;
-            }
-            
-            .title-slide h2 {
-                font-size: 20px;
-            }
-            
-            .content-slide h2 {
-                font-size: 32px;
-            }
-            
-            .two-column, .about-content, .skills-grid {
-                grid-template-columns: 1fr;
-            }
-            
-            .stats-grid {
+        @media (max-width: 1024px) {
+            .process-timeline {
                 grid-template-columns: repeat(2, 1fr);
-                gap: 15px;
             }
-            
-            .process-steps {
+
+            .process-step::before {
+                display: none;
+            }
+
+            .challenges-grid,
+            .solutions-grid,
+            .learnings-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .methods-grid {
                 grid-template-columns: 1fr;
             }
-            
-            .nav-buttons {
-                bottom: 20px;
+
+            .results-stats {
+                gap: 3rem;
             }
-            
-            .slide-counter {
-                top: 20px;
-                right: 20px;
+
+            .slide-nav {
+                display: none;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+
+            .slide {
+                padding: 4rem 1.5rem;
+            }
+
+            .process-timeline,
+            .challenges-grid,
+            .solutions-grid,
+            .collab-grid,
+            .findings-grid,
+            .learnings-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .results-stats {
+                flex-direction: column;
+                gap: 2rem;
+            }
+
+            .results-feedback {
+                grid-template-columns: 1fr;
+            }
+
+            .stats-row {
+                gap: 2rem;
             }
         }
     </style>
 </head>
 <body>
-    <div class="presentation-container">
-        <!-- Blobs -->
-        <div class="blob blob-1"></div>
-        <div class="blob blob-2"></div>
-        <div class="blob blob-3"></div>
-        
-        <!-- Slide Counter -->
-        <div class="slide-counter">
-            <span id="currentSlide">1</span> / <span id="totalSlides">15</span>
-        </div>
-        
-        <!-- Slide 1: Title -->
-        <div class="slide active title-slide">
-            <div class="slide-content">
-                <h1>UX Research Portfolio</h1>
-                <h2>VirtualCare App & NISRA Accessibility Redesign</h2>
-                <div class="author">
-                    <p>Katrina</p>
-                    <p style="font-size: 16px; opacity: 0.8; margin-top: 10px;">UX Researcher | Chicago, IL</p>
-                </div>
+    <!-- Navigation -->
+    <nav class="nav">
+        <div class="nav-inner">
+            <div class="nav-logo">UX Case Study</div>
+            <div class="nav-links">
+                <a href="#overview" class="nav-link">Overview</a>
+                <a href="#process" class="nav-link">Process</a>
+                <a href="#research" class="nav-link">Research</a>
+                <a href="#findings" class="nav-link">Findings</a>
+                <a href="#solutions" class="nav-link">Solutions</a>
+                <a href="#collaboration" class="nav-link">Team</a>
+                <a href="#results" class="nav-link">Results</a>
             </div>
         </div>
-        
-        <!-- Slide 2: About Me -->
-        <div class="slide">
-            <div class="slide-content">
-                <div class="about-content">
-                    <div class="about-text">
-                        <h3>About Me</h3>
-                        <p>I'm a UX Researcher based in Chicago with a Master's in Human-Computer Interaction from DePaul University and over 4 years of experience.</p>
-                        <p>I'm passionate about user research and understanding user needs to create better user experiences.</p>
-                        <p style="font-weight: 600; color: #667eea; font-size: 20px; margin-top: 30px;">Let's connect and create something meaningful together.</p>
-                        
-                        <div class="credentials">
-                            <h4>Education & Experience</h4>
-                            <ul>
-                                <li>Master's in Human-Computer Interaction, DePaul University</li>
-                                <li>4+ years of UX Research experience</li>
-                                <li>Based in Chicago, Illinois</li>
-                            </ul>
-                        </div>
+    </nav>
+
+    <!-- Slide Navigation Dots -->
+    <div class="slide-nav">
+        <div class="slide-dot active" data-slide="0"></div>
+        <div class="slide-dot" data-slide="1"></div>
+        <div class="slide-dot" data-slide="2"></div>
+        <div class="slide-dot" data-slide="3"></div>
+        <div class="slide-dot" data-slide="4"></div>
+        <div class="slide-dot" data-slide="5"></div>
+        <div class="slide-dot" data-slide="6"></div>
+        <div class="slide-dot" data-slide="7"></div>
+    </div>
+
+    <div class="slides-container">
+        <!-- Slide 1: Hero -->
+        <section class="slide hero visible" id="hero">
+            <div class="slide-content hero-content">
+                <div class="hero-eyebrow">UX Research Case Study</div>
+                <h1 class="hero-title">
+                    Improving Web Accessibility<br>
+                    Through <span class="highlight">UX Research</span>
+                </h1>
+                <p class="hero-subtitle">
+                    Led accessibility research for NISRA's website, identifying barriers for visually impaired users and recommending solutions that increased program sign-ups by 20%.
+                </p>
+                <div class="stats-row">
+                    <div class="stat-item">
+                        <span class="stat-value">+20%</span>
+                        <span class="stat-label">Sign-up Increase</span>
                     </div>
-                    
-                    <div class="skills-section">
-                        <h4>Research Methods & Tools</h4>
-                        <div class="skills-grid">
-                            <div class="skill-category">
-                                <h5>Research Methods</h5>
-                                <ul>
-                                    <li>User Interviews</li>
-                                    <li>Contextual Inquiry</li>
-                                    <li>Usability Testing</li>
-                                    <li>Card Sorting</li>
-                                    <li>Tree Testing</li>
-                                    <li>First Click Testing</li>
-                                    <li>Survey Design</li>
-                                    <li>A/B Testing</li>
-                                </ul>
-                            </div>
-                            <div class="skill-category">
-                                <h5>HCI Tools</h5>
-                                <ul>
-                                    <li>Figma</li>
-                                    <li>Miro</li>
-                                    <li>Dovetail</li>
-                                    <li>Optimal Workshop</li>
-                                    <li>UserTesting</li>
-                                    <li>Maze</li>
-                                    <li>Qualtrics</li>
-                                    <li>Google Analytics</li>
-                                </ul>
-                            </div>
-                            <div class="skill-category">
-                                <h5>Analysis</h5>
-                                <ul>
-                                    <li>Thematic Analysis</li>
-                                    <li>Affinity Mapping</li>
-                                    <li>Journey Mapping</li>
-                                    <li>Persona Development</li>
-                                    <li>Heuristic Evaluation</li>
-                                    <li>WCAG Compliance</li>
-                                </ul>
-                            </div>
-                            <div class="skill-category">
-                                <h5>Additional Skills</h5>
-                                <ul>
-                                    <li>SQL</li>
-                                    <li>Python (Data Analysis)</li>
-                                    <li>Information Architecture</li>
-                                    <li>Accessibility Research</li>
-                                    <li>Stakeholder Presentations</li>
-                                </ul>
-                            </div>
-                        </div>
+                    <div class="stat-item">
+                        <span class="stat-value">85%</span>
+                        <span class="stat-label">Easier to Use</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-value">100%</span>
+                        <span class="stat-label">WCAG 2.0 AA</span>
                     </div>
                 </div>
             </div>
-        </div>
-        
-        <!-- Slide 3: VirtualCare Divider -->
-        <div class="slide divider-section">
+        </section>
+
+        <!-- Slide 2: Project Overview -->
+        <section class="slide" id="overview">
             <div class="slide-content">
-                <h1>Project 1</h1>
-                <p>VirtualCare App</p>
-                <p style="font-size: 18px; margin-top: 20px; opacity: 0.8;">Improving Healthcare Access During COVID-19</p>
-            </div>
-        </div>
-        
-        <!-- Slide 4: VirtualCare Problem -->
-        <div class="slide">
-            <div class="slide-content">
-                <h2>VirtualCare: The Challenge</h2>
-                <p style="font-size: 20px; margin-bottom: 40px;">During COVID-19, patients at Weiss Memorial Hospital struggled to access outpatient care through the digital platform.</p>
-                
-                <div class="process-steps">
-                    <div class="step">
-                        <div class="step-number">1</div>
-                        <h4>Hidden Availability</h4>
-                        <p>Patients spent 2+ hours calling unavailable clinics</p>
+                <div class="section-header">
+                    <span class="section-number">01 / Project Overview</span>
+                    <h2 class="section-title">The Challenge</h2>
+                    <p class="section-desc">
+                        The Northern Illinois Special Recreation Association (NISRA) provides recreation programs for individuals with disabilities. However, their website failed basic accessibility standards—preventing visually impaired users from signing up independently.
+                    </p>
+                </div>
+
+                <div class="overview-grid">
+                    <div class="overview-card">
+                        <div class="overview-card-icon coral">👤</div>
+                        <div class="overview-card-title">My Role</div>
+                        <div class="overview-card-value">UX Researcher</div>
                     </div>
-                    <div class="step">
-                        <div class="step-number">2</div>
-                        <h4>Communication Gaps</h4>
-                        <p>No async options, forced into phone tag</p>
+                    <div class="overview-card">
+                        <div class="overview-card-icon lavender">👥</div>
+                        <div class="overview-card-title">Team</div>
+                        <div class="overview-card-value">1 Marketing Director, 1 Web Developer</div>
                     </div>
-                    <div class="step">
-                        <div class="step-number">3</div>
-                        <h4>Scheduling Confusion</h4>
-                        <p>Unclear confirmations led to missed appointments</p>
+                    <div class="overview-card">
+                        <div class="overview-card-icon mint">📅</div>
+                        <div class="overview-card-title">Duration</div>
+                        <div class="overview-card-value">May 2019 – August 2020</div>
                     </div>
-                    <div class="step">
-                        <div class="step-number">?</div>
-                        <h4>Research Needed</h4>
-                        <p>How do we fix these barriers?</p>
+                    <div class="overview-card">
+                        <div class="overview-card-icon amber">🎯</div>
+                        <div class="overview-card-title">Scope</div>
+                        <div class="overview-card-value">Research, Testing, Recommendations</div>
                     </div>
                 </div>
-                
-                <div class="quote">
-                    It's frustrating to spend hours calling providers, only to find out they aren't accepting new patients. I just gave up.
-                </div>
-            </div>
-        </div>
-        
-        <!-- Slide 5: VirtualCare Research Methods -->
-        <div class="slide">
-            <div class="slide-content">
-                <h2>VirtualCare: Research Approach</h2>
-                
-                <div class="two-column">
-                    <div>
-                        <div class="info-card">
-                            <h4>Discovery Research</h4>
-                            <ul>
-                                <li>10 semi-structured interviews (45-60 min)</li>
-                                <li>Recruited via hospital outpatient program</li>
-                                <li>Thematic analysis with affinity mapping</li>
-                                <li>Validated with hospital call data</li>
-                            </ul>
-                        </div>
-                        
-                        <div class="info-card">
-                            <h4>Usability Testing</h4>
-                            <ul>
-                                <li>Round 1: 10 participants, 60% success</li>
-                                <li>Identified 3 critical UI issues</li>
-                                <li>Round 2: 10 participants, 85% success</li>
-                                <li>Validated design improvements</li>
-                            </ul>
-                        </div>
-                        
-                        <div class="info-card">
-                            <h4>Key Metrics Tracked</h4>
-                            <ul>
-                                <li>Task completion rate</li>
-                                <li>Time on task</li>
-                                <li>Error rate</li>
-                                <li>User satisfaction (1-5 scale)</li>
-                                <li>SUS score</li>
-                            </ul>
-                        </div>
+
+                <div class="challenges-grid">
+                    <div class="challenge-card" data-number="1">
+                        <div class="challenge-icon">📝</div>
+                        <h3 class="challenge-title">Small Text Size</h3>
+                        <p class="challenge-desc">Users with low vision couldn't read program details or form fields, requiring assistance to navigate basic tasks.</p>
                     </div>
-                    
-                    <div class="chart-container">
-                        <h3>Task Success Improvement</h3>
-                        <div class="bar-chart">
-                            <div class="bar-item">
-                                <div class="bar-label">Round 1</div>
-                                <div class="bar-bg">
-                                    <div class="bar-fill" style="--width: 60%;">60%</div>
-                                </div>
-                            </div>
-                            <div class="bar-item">
-                                <div class="bar-label">Round 2</div>
-                                <div class="bar-bg">
-                                    <div class="bar-fill" style="--width: 85%; animation-delay: 0.3s;">85%</div>
-                                </div>
-                            </div>
-                            <div class="bar-item">
-                                <div class="bar-label">Post-Launch</div>
-                                <div class="bar-bg">
-                                    <div class="bar-fill" style="--width: 90%; animation-delay: 0.6s;">90%</div>
-                                </div>
-                            </div>
-                        </div>
+                    <div class="challenge-card" data-number="2">
+                        <div class="challenge-icon">🎨</div>
+                        <h3 class="challenge-title">Poor Color Contrast</h3>
+                        <p class="challenge-desc">Text blended into backgrounds, failing WCAG standards (below 4.5:1 ratio). Users described it as "straining to read."</p>
+                    </div>
+                    <div class="challenge-card" data-number="3">
+                        <div class="challenge-icon">🏷️</div>
+                        <h3 class="challenge-title">Unclear Form Labels</h3>
+                        <p class="challenge-desc">Sign-up fields lacked descriptive labels, causing confusion and screen reader incompatibility. Users called it "a guessing game."</p>
                     </div>
                 </div>
             </div>
-        </div>
-        
-        <!-- Slide 6: VirtualCare Solutions -->
-        <div class="slide">
+        </section>
+
+        <!-- Slide 3: UX Process -->
+        <section class="slide" id="process">
             <div class="slide-content">
-                <h2>VirtualCare: Research-Driven Solutions</h2>
-                
-                <div class="two-column">
-                    <div>
-                        <h3>Key Features Delivered</h3>
-                        <div class="info-card">
-                            <h4>Enhanced Provider Search</h4>
-                            <ul>
-                                <li>Real-time availability display</li>
-                                <li>Advanced filters (specialty, location)</li>
-                                <li>Provider ratings and profiles</li>
-                            </ul>
-                        </div>
-                        
-                        <div class="info-card">
-                            <h4>Communication Tools</h4>
-                            <ul>
-                                <li>Secure in-app messaging</li>
-                                <li>Video consultation options</li>
-                                <li>Message history tracking</li>
-                            </ul>
-                        </div>
-                        
-                        <div class="info-card">
-                            <h4>Smart Scheduling</h4>
-                            <ul>
-                                <li>Conflict detection system</li>
-                                <li>Clear confirmation flows</li>
-                                <li>Automated email and SMS reminders</li>
-                            </ul>
-                        </div>
-                    </div>
-                    
-                    <div>
-                        <div class="success-box">
-                            <h4 style="color: #2e7d32; margin-bottom: 15px;">Impact Metrics</h4>
-                            <div class="stats-grid" style="grid-template-columns: 1fr 1fr; gap: 15px;">
-                                <div class="stat-card">
-                                    <div class="stat-number">+15%</div>
-                                    <div class="stat-label">User Satisfaction</div>
-                                </div>
-                                <div class="stat-card">
-                                    <div class="stat-number">-30%</div>
-                                    <div class="stat-label">Search Time</div>
-                                </div>
-                                <div class="stat-card">
-                                    <div class="stat-number">+25%</div>
-                                    <div class="stat-label">Task Completion</div>
-                                </div>
-                                <div class="stat-card">
-                                    <div class="stat-number">-20%</div>
-                                    <div class="stat-label">Support Calls</div>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="highlight-box">
-                            <strong>Key Research Learning:</strong> Moving filters from hidden to visible increased task success by 20%. Small UI details have outsized impact on user experience.
-                        </div>
-                    </div>
+                <div class="section-header">
+                    <span class="section-number">02 / UX Process</span>
+                    <h2 class="section-title">Double Diamond Approach</h2>
+                    <p class="section-desc">
+                        I followed a structured research process, moving from understanding users to implementing and validating solutions.
+                    </p>
                 </div>
-            </div>
-        </div>
-        
-        <!-- Slide 7: VirtualCare User Persona -->
-        <div class="slide">
-            <div class="slide-content">
-                <h2>VirtualCare: User Persona</h2>
-                
-                <div class="two-column">
-                    <div>
-                        <div class="info-card" style="background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%); border-left: 4px solid #1976d2;">
-                            <h3 style="color: #1976d2; margin-bottom: 20px;">Sarah Chen</h3>
-                            <p style="font-size: 18px; margin-bottom: 15px;"><strong>Age:</strong> 28</p>
-                            <p style="font-size: 18px; margin-bottom: 15px;"><strong>Occupation:</strong> Marketing Manager</p>
-                            <p style="font-size: 18px; margin-bottom: 15px;"><strong>Location:</strong> Chicago, IL</p>
-                            <p style="font-size: 18px; margin-bottom: 15px;"><strong>Tech Comfort:</strong> High</p>
-                        </div>
-                        
-                        <div class="quote" style="margin-top: 30px;">
-                            I don't have time to be on hold. I need healthcare that fits into my busy life.
-                        </div>
-                    </div>
-                    
-                    <div>
-                        <div class="info-card">
-                            <h4>Goals</h4>
-                            <ul>
-                                <li>Find providers quickly without phone calls</li>
-                                <li>Communicate asynchronously on her schedule</li>
-                                <li>Never miss or double-book appointments</li>
-                            </ul>
-                        </div>
-                        
-                        <div class="info-card" style="background: linear-gradient(135deg, #ffebee 0%, #ffcdd2 100%); border-left: 4px solid #e74c3c;">
-                            <h4 style="color: #c62828;">Pain Points</h4>
-                            <ul style="color: #555;">
-                                <li>Wastes 3+ hours searching for available providers</li>
-                                <li>Can't reach doctors during business hours</li>
-                                <li>Missed appointments due to unclear reminders</li>
-                                <li>Anxious about booking accuracy</li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        
-        <!-- Slide 8: VirtualCare Impact -->
-        <div class="slide">
-            <div class="slide-content">
-                <h2>VirtualCare: Final Impact</h2>
-                
-                <div class="stats-grid" style="margin-bottom: 40px;">
-                    <div class="stat-card">
-                        <div class="stat-number">30</div>
-                        <div class="stat-label">Participants</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-number">10</div>
-                        <div class="stat-label">Interviews</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-number">20</div>
-                        <div class="stat-label">Usability Tests</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-number">6</div>
-                        <div class="stat-label">Months Duration</div>
-                    </div>
-                </div>
-                
-                <div class="two-column">
-                    <div class="chart-container">
-                        <h3>Business Impact (3 Months Post-Launch)</h3>
-                        <div class="bar-chart">
-                            <div class="bar-item">
-                                <div class="bar-label">User Satisfaction</div>
-                                <div class="bar-bg">
-                                    <div class="bar-fill" style="--width: 15%;">+15%</div>
-                                </div>
-                            </div>
-                            <div class="bar-item">
-                                <div class="bar-label">Search Time</div>
-                                <div class="bar-bg">
-                                    <div class="bar-fill" style="--width: 30%; animation-delay: 0.2s;">-30%</div>
-                                </div>
-                            </div>
-                            <div class="bar-item">
-                                <div class="bar-label">Task Success</div>
-                                <div class="bar-bg">
-                                    <div class="bar-fill" style="--width: 25%; animation-delay: 0.4s;">+25%</div>
-                                </div>
-                            </div>
-                            <div class="bar-item">
-                                <div class="bar-label">Support Calls</div>
-                                <div class="bar-bg">
-                                    <div class="bar-fill" style="--width: 20%; animation-delay: 0.6s;">-20%</div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div>
-                        <div class="success-box">
-                            <h4 style="color: #2e7d32; margin-bottom: 15px;">Key Takeaways</h4>
-                            <ul style="list-style: none; padding: 0; color: #555;">
-                                <li style="margin-bottom: 15px;">Hours saved for thousands of patients</li>
-                                <li style="margin-bottom: 15px;">Reduced stress during pandemic</li>
-                                <li style="margin-bottom: 15px;">Better healthcare access when needed most</li>
-                                <li>15 staff hours saved per week</li>
-                            </ul>
-                        </div>
-                        
-                        <div class="highlight-box">
-                            <strong>Research Insight:</strong> Iteration is essential. Round 1's 60% completion felt like failure but treating it as learning led to dramatic Round 2 improvements.
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        
-        <!-- Slide 9: NISRA Divider -->
-        <div class="slide divider-section">
-            <div class="slide-content">
-                <h1>Project 2</h1>
-                <p>NISRA Website Redesign</p>
-                <p style="font-size: 18px; margin-top: 20px; opacity: 0.8;">Web Accessibility & Information Architecture</p>
-            </div>
-        </div>
-        
-        <!-- Slide 10: NISRA Problem -->
-        <div class="slide">
-            <div class="slide-content">
-                <h2>NISRA: The Challenge</h2>
-                <p style="font-size: 20px; margin-bottom: 40px;">NISRA's website failed basic accessibility standards, preventing visually impaired users from signing up independently.</p>
-                
-                <div class="process-steps">
-                    <div class="step">
-                        <div class="step-number">1</div>
-                        <h4>Small Text</h4>
-                        <p>Users couldn't read program details comfortably</p>
-                    </div>
-                    <div class="step">
-                        <div class="step-number">2</div>
-                        <h4>Poor Contrast</h4>
-                        <p>Failed WCAG 2.0 AA standards</p>
-                    </div>
-                    <div class="step">
-                        <div class="step-number">3</div>
-                        <h4>Unclear Labels</h4>
-                        <p>Form fields confused users and screen readers</p>
-                    </div>
-                    <div class="step">
-                        <div class="step-number">4</div>
-                        <h4>Navigation Issues</h4>
-                        <p>Cluttered menus, unclear structure</p>
-                    </div>
-                </div>
-                
-                <div class="two-column" style="margin-top: 40px;">
-                    <div class="chart-container">
-                        <h3>WCAG Contrast Audit Results</h3>
-                        <div class="bar-chart">
-                            <div class="bar-item">
-                                <div class="bar-label">Body Text</div>
-                                <div class="bar-bg">
-                                    <div class="bar-fill" style="--width: 42%; background: linear-gradient(90deg, #e74c3c, #c0392b);">3.2:1</div>
-                                </div>
-                            </div>
-                            <div class="bar-item">
-                                <div class="bar-label">Form Labels</div>
-                                <div class="bar-bg">
-                                    <div class="bar-fill" style="--width: 35%; background: linear-gradient(90deg, #e74c3c, #c0392b); animation-delay: 0.2s;">2.8:1</div>
-                                </div>
-                            </div>
-                            <div class="bar-item">
-                                <div class="bar-label">Required (WCAG)</div>
-                                <div class="bar-bg">
-                                    <div class="bar-fill" style="--width: 90%; background: linear-gradient(90deg, #2ecc71, #27ae60); animation-delay: 0.4s;">4.5:1</div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="quote">
-                        Forms feel like a guessing game. I don't know what to enter. The text was too small and the colors made it hard to read.
-                    </div>
-                </div>
-            </div>
-        </div>
-        
-        <!-- Slide 11: NISRA Research Methods -->
-        <div class="slide">
-            <div class="slide-content">
-                <h2>NISRA: Research Methodology</h2>
-                
-                <div class="two-column">
-                    <div>
-                        <div class="info-card">
-                            <h4>Competitive Analysis</h4>
-                            <ul>
-                                <li>Benchmarked against NWSRA and FVSRA</li>
-                                <li>Identified 5 key accessibility gaps</li>
-                                <li>NISRA lacked text resize and WCAG compliance</li>
-                            </ul>
-                        </div>
-                        
-                        <div class="info-card">
-                            <h4>Contextual Inquiries</h4>
-                            <ul>
-                                <li>10 participants with visual impairments</li>
-                                <li>Observed via Zoom (real-time struggles)</li>
-                                <li>7 out of 10 couldn't read program details</li>
-                                <li>9 out of 10 hesitated at form fields</li>
-                            </ul>
-                        </div>
-                        
-                        <div class="info-card">
-                            <h4>Card Sorting (2 Rounds)</h4>
-                            <ul>
-                                <li>Round 1: Identified confusion with categories</li>
-                                <li>Round 2: 85% agreement on structure</li>
-                                <li>40% faster completion time</li>
-                            </ul>
-                        </div>
-                    </div>
-                    
-                    <div>
-                        <div class="info-card">
-                            <h4>Tree Testing (2 Rounds)</h4>
-                            <ul>
-                                <li>Summer Camps: 74% to 91% success</li>
-                                <li>Volunteer Info: 88% to 95% success</li>
-                                <li>Event Registration: 79% to 88% success</li>
-                                <li>Average time reduced by 23%</li>
-                            </ul>
-                        </div>
-                        
-                        <div class="info-card">
-                            <h4>Usability Testing</h4>
-                            <ul>
-                                <li>5 participants tested updated design</li>
-                                <li>Tasks: resize text, read content, complete form</li>
-                                <li>Identified 3 issues requiring iteration</li>
-                                <li>Final validation showed 90% success</li>
-                            </ul>
-                        </div>
-                        
-                        <div class="info-card" style="background: linear-gradient(135deg, #fff3e0 0%, #ffe0b2 100%); border-left: 4px solid #ff9800;">
-                            <h4 style="color: #e65100;">WCAG Audit Tool</h4>
-                            <p style="color: #555; font-size: 14px;">WebAIM's Contrast Checker validated all findings and ensured compliance throughout iteration process.</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        
-        <!-- Slide 12: NISRA Solutions -->
-        <div class="slide">
-            <div class="slide-content">
-                <h2>NISRA: Accessibility Solutions</h2>
-                
-                <div class="two-column">
-                    <div>
-                        <h3>Research-Backed Improvements</h3>
-                        <div class="info-card">
-                            <h4>Text Resize Controls</h4>
-                            <ul>
-                                <li>User-controlled text sizing button</li>
-                                <li>Clear "Text Size" label added after testing</li>
-                                <li>No browser zoom required</li>
-                            </ul>
-                        </div>
-                        
-                        <div class="info-card">
-                            <h4>Color Contrast Updates</h4>
-                            <ul>
-                                <li>Achieved 4.5:1 ratio for body text</li>
-                                <li>3:1 ratio for large text (headers)</li>
-                                <li>Fine-tuned with WebAIM until all passed</li>
-                            </ul>
-                        </div>
-                        
-                        <div class="info-card">
-                            <h4>Clear Form Labels</h4>
-                            <ul>
-                                <li>Descriptive labels for all input fields</li>
-                                <li>Screen reader compatible throughout</li>
-                                <li>Visible validation messages</li>
-                            </ul>
-                        </div>
-                        
-                        <div class="info-card">
-                            <h4>Information Architecture</h4>
-                            <ul>
-                                <li>Reduced categories from 8 to 5</li>
-                                <li>Removed 15+ outdated pages</li>
-                                <li>Clearer menu labels and structure</li>
-                            </ul>
-                        </div>
-                    </div>
-                    
-                    <div>
-                        <div class="chart-container">
-                            <h3>Before vs After Results</h3>
-                            <div class="bar-chart">
-                                <div class="bar-item">
-                                    <div class="bar-label">Sign-Ups</div>
-                                    <div class="bar-bg">
-                                        <div class="bar-fill" style="--width: 100%;">+20%</div>
-                                    </div>
-                                </div>
-                                <div class="bar-item">
-                                    <div class="bar-label">User Satisfaction</div>
-                                    <div class="bar-bg">
-                                        <div class="bar-fill" style="--width: 85%; animation-delay: 0.2s;">85%</div>
-                                    </div>
-                                </div>
-                                <div class="bar-item">
-                                    <div class="bar-label">WCAG Compliance</div>
-                                    <div class="bar-bg">
-                                        <div class="bar-fill" style="--width: 100%; animation-delay: 0.4s;">100%</div>
-                                    </div>
-                                </div>
-                                <div class="bar-item">
-                                    <div class="bar-label">Independent Signups</div>
-                                    <div class="bar-bg">
-                                        <div class="bar-fill" style="--width: 95%; animation-delay: 0.6s;">95%</div>
-                                    </div>
-                                </div>
-                                <div class="bar-item">
-                                    <div class="bar-label">Task Time Reduced</div>
-                                    <div class="bar-bg">
-                                        <div class="bar-fill" style="--width: 23%; animation-delay: 0.8s;">-23%</div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="success-box" style="margin-top: 30px;">
-                            <h4 style="color: #2e7d32; margin-bottom: 15px;">User Feedback</h4>
-                            <p style="font-style: italic; font-size: 16px; color: #555;">"The larger text made everything easier to read. I was finally able to sign up without needing help!"</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        
-        <!-- Slide 13: NISRA Impact -->
-        <div class="slide">
-            <div class="slide-content">
-                <h2>NISRA: Final Impact</h2>
-                
-                <div class="stats-grid" style="margin-bottom: 40px;">
-                    <div class="stat-card">
-                        <div class="stat-number">25</div>
-                        <div class="stat-label">Total Participants</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-number">10</div>
-                        <div class="stat-label">Contextual Inquiries</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-number">12</div>
-                        <div class="stat-label">Tree Testing Sessions</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-number">6</div>
-                        <div class="stat-label">Months Duration</div>
-                    </div>
-                </div>
-                
-                <div class="two-column">
-                    <div>
-                        <div class="success-box">
-                            <h4 style="color: #2e7d32; margin-bottom: 15px;">Accessibility Impact</h4>
-                            <ul style="list-style: none; padding: 0; color: #555;">
-                                <li style="margin-bottom: 15px;">Site now meets WCAG 2.0 AA standards</li>
-                                <li style="margin-bottom: 15px;">Users complete tasks independently</li>
-                                <li style="margin-bottom: 15px;">20% increase in program sign-ups</li>
-                                <li style="margin-bottom: 15px;">85% reported easier navigation</li>
-                                <li>Fulfills NISRA's mission of accessibility for all</li>
-                            </ul>
-                        </div>
-                        
-                        <div class="highlight-box">
-                            <strong>Key Learning:</strong> Accessibility isn't just ethical—it directly increases engagement. Meeting WCAG standards increased sign-ups by 20%.
-                        </div>
-                    </div>
-                    
-                    <div>
-                        <div class="info-card" style="background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%); border-left: 4px solid #66bb6a;">
-                            <h4 style="color: #2e7d32;">Navigation Improvements</h4>
-                            <ul style="color: #555;">
-                                <li>Simplified structure reduced confusion</li>
-                                <li>Users completed tasks 23% faster</li>
-                                <li>Higher engagement with intuitive content</li>
-                                <li>40% reduction in navigation errors</li>
-                                <li>90% first-click success on key features</li>
-                            </ul>
-                        </div>
-                        
-                        <div class="quote" style="margin-top: 20px;">
-                            Finding what I need is so much easier now! I love how the programs are grouped—it makes sense.
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        
-        <!-- Slide 14: Key Learnings -->
-        <div class="slide">
-            <div class="slide-content">
-                <h2>Key Research Learnings</h2>
-                
-                <div class="stats-grid">
-                    <div class="stat-card">
-                        <div style="font-size: 48px; margin-bottom: 15px;">⚗</div>
-                        <h3 style="color: #2c3e50; font-size: 18px; margin-bottom: 10px;">Mixed Methods Matter</h3>
-                        <p style="color: #7f8c8d; font-size: 14px;">Combining qualitative insights with quantitative validation created undeniable cases for change.</p>
-                    </div>
-                    
-                    <div class="stat-card">
-                        <div style="font-size: 48px; margin-bottom: 15px;">🎯</div>
-                        <h3 style="color: #2c3e50; font-size: 18px; margin-bottom: 10px;">Small Details, Big Impact</h3>
-                        <p style="color: #7f8c8d; font-size: 14px;">Moving a filter from hidden to visible increased task success by 20%. Never underestimate placement.</p>
-                    </div>
-                    
-                    <div class="stat-card">
-                        <div style="font-size: 48px; margin-bottom: 15px;">🔄</div>
-                        <h3 style="color: #2c3e50; font-size: 18px; margin-bottom: 10px;">Iteration is Everything</h3>
-                        <p style="color: #7f8c8d; font-size: 14px;">First-round testing felt like failure, but treating it as learning led to dramatic improvements.</p>
-                    </div>
-                    
-                    <div class="stat-card">
-                        <div style="font-size: 48px; margin-bottom: 15px;">♿</div>
-                        <h3 style="color: #2c3e50; font-size: 18px; margin-bottom: 10px;">Accessibility Drives Engagement</h3>
-                        <p style="color: #7f8c8d; font-size: 14px;">Meeting WCAG standards wasn't just ethical—it directly increased engagement by 20%.</p>
-                    </div>
-                </div>
-                
-                <div class="two-column" style="margin-top: 50px;">
-                    <div class="highlight-box">
-                        <h4 style="color: #f57c00; margin-bottom: 15px;">What I'd Do Differently</h4>
-                        <ul style="color: #555; font-size: 14px;">
-                            <li>Expand demographic diversity (include more 50+ users)</li>
-                            <li>Conduct competitive analysis earlier in process</li>
-                            <li>Create centralized research repository</li>
-                            <li>Test provider workflows alongside patient flows</li>
-                            <li>Implement A/B testing for direct comparison</li>
-                            <li>Include accessibility experts for validation</li>
+
+                <div class="process-timeline">
+                    <div class="process-step">
+                        <div class="process-phase">Discover</div>
+                        <h3 class="process-title">Research</h3>
+                        <ul class="process-methods">
+                            <li>Competitive Analysis</li>
+                            <li>Observation</li>
+                            <li>Contextual Inquiry</li>
+                            <li>User Interviews</li>
                         </ul>
                     </div>
-                    
-                    <div class="success-box">
-                        <h4 style="color: #2e7d32; margin-bottom: 15px;">Research Philosophy</h4>
-                        <p style="font-style: italic; font-size: 15px; color: #555;">
-                            The best solutions come from listening, observing, testing, and iterating—always with empathy for the people we're designing for. Research must center the voices of those we serve.
-                        </p>
+                    <div class="process-step">
+                        <div class="process-phase">Define</div>
+                        <h3 class="process-title">Synthesize</h3>
+                        <ul class="process-methods">
+                            <li>User Persona</li>
+                            <li>Journey Mapping</li>
+                            <li>Affinity Diagrams</li>
+                            <li>Problem Statement</li>
+                        </ul>
+                    </div>
+                    <div class="process-step">
+                        <div class="process-phase">Develop</div>
+                        <h3 class="process-title">Ideate</h3>
+                        <ul class="process-methods">
+                            <li>Brainstorming</li>
+                            <li>Sketching</li>
+                            <li>Prototyping</li>
+                            <li>Design Handoff</li>
+                        </ul>
+                    </div>
+                    <div class="process-step">
+                        <div class="process-phase">Deliver</div>
+                        <h3 class="process-title">Validate</h3>
+                        <ul class="process-methods">
+                            <li>Usability Testing</li>
+                            <li>Iteration</li>
+                            <li>User Survey</li>
+                            <li>Impact Analysis</li>
+                        </ul>
                     </div>
                 </div>
+
+                <div class="quote-block">
+                    <p class="quote-text">How might we improve website accessibility so users with visual impairments can read content, navigate pages, and complete tasks without frustration or assistance?</p>
+                    <p class="quote-author">— Problem Statement</p>
+                </div>
             </div>
-        </div>
-        
-        <!-- Slide 15: Thank You -->
-        <div class="slide title-slide">
+        </section>
+
+        <!-- Slide 4: Research Methods -->
+        <section class="slide" id="research">
             <div class="slide-content">
-                <h1 style="font-size: 56px; margin-bottom: 30px;">Thank You</h1>
-                <h2 style="font-size: 24px; margin-bottom: 50px;">Let's Connect</h2>
-                
-                <div class="stats-grid">
-                    <div class="stat-card" style="background: rgba(255, 255, 255, 0.15); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.2);">
-                        <div style="font-size: 36px; color: white; margin-bottom: 10px;">✉</div>
-                        <div style="color: white; font-size: 14px;">your.email@example.com</div>
+                <div class="section-header">
+                    <span class="section-number">03 / Research Methods</span>
+                    <h2 class="section-title">Understanding Users & Context</h2>
+                    <p class="section-desc">
+                        I employed multiple research methods to gather comprehensive insights about accessibility barriers and user needs.
+                    </p>
+                </div>
+
+                <div class="methods-grid">
+                    <div class="method-card">
+                        <div class="method-number">01</div>
+                        <div class="method-content">
+                            <h3>Competitive Analysis</h3>
+                            <p>Benchmarked NISRA against NWSRA and FVSRA to identify accessibility feature gaps and industry best practices.</p>
+                            <div class="method-details">
+                                <span class="method-tag">2 Competitors</span>
+                                <span class="method-tag">5 Features Compared</span>
+                                <span class="method-tag">WCAG Audit</span>
+                            </div>
+                        </div>
                     </div>
-                    <div class="stat-card" style="background: rgba(255, 255, 255, 0.15); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.2);">
-                        <div style="font-size: 36px; color: white; margin-bottom: 10px;">💼</div>
-                        <div style="color: white; font-size: 14px;">linkedin.com/in/yourname</div>
+                    <div class="method-card">
+                        <div class="method-number">02</div>
+                        <div class="method-content">
+                            <h3>Contextual Inquiries</h3>
+                            <p>Observed 10 participants with visual impairments interacting with the website via Zoom, watching them attempt real tasks.</p>
+                            <div class="method-details">
+                                <span class="method-tag">10 Participants</span>
+                                <span class="method-tag">Remote via Zoom</span>
+                                <span class="method-tag">Task-based</span>
+                            </div>
+                        </div>
                     </div>
-                    <div class="stat-card" style="background: rgba(255, 255, 255, 0.15); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.2);">
-                        <div style="font-size: 36px; color: white; margin-bottom: 10px;">🌐</div>
-                        <div style="color: white; font-size: 14px;">yourportfolio.com</div>
+                    <div class="method-card">
+                        <div class="method-number">03</div>
+                        <div class="method-content">
+                            <h3>Semi-Structured Interviews</h3>
+                            <p>Conducted 10 in-depth interviews with registered and non-registered NISRA users to understand pain points and needs.</p>
+                            <div class="method-details">
+                                <span class="method-tag">10 Interviews</span>
+                                <span class="method-tag">Mixed Users</span>
+                                <span class="method-tag">Open-ended Questions</span>
+                            </div>
+                        </div>
                     </div>
-                    <div class="stat-card" style="background: rgba(255, 255, 255, 0.15); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.2);">
-                        <div style="font-size: 36px; color: white; margin-bottom: 10px;">📍</div>
-                        <div style="color: white; font-size: 14px;">Chicago, IL</div>
+                    <div class="method-card">
+                        <div class="method-number">04</div>
+                        <div class="method-content">
+                            <h3>Accessibility Audit</h3>
+                            <p>Used WebAIM's Contrast Checker and WCAG 2.0 AA guidelines to objectively document specific accessibility failures.</p>
+                            <div class="method-details">
+                                <span class="method-tag">WebAIM Tools</span>
+                                <span class="method-tag">WCAG 2.0 AA</span>
+                                <span class="method-tag">Contrast Ratios</span>
+                            </div>
+                        </div>
                     </div>
                 </div>
-                
-                <p style="margin-top: 50px; font-size: 16px; opacity: 0.8;">
-                    Download full case studies at yourportfolio.com
-                </p>
             </div>
-        </div>
-        
-        <!-- Navigation -->
-        <div class="nav-buttons">
-            <button class="nav-btn" id="prevBtn" onclick="changeSlide(-1)">←</button>
-            <button class="nav-btn" id="nextBtn" onclick="changeSlide(1)">→</button>
-        </div>
+        </section>
+
+        <!-- Slide 5: Key Findings -->
+        <section class="slide" id="findings">
+            <div class="slide-content">
+                <div class="section-header">
+                    <span class="section-number">04 / Key Findings</span>
+                    <h2 class="section-title">What the Research Revealed</h2>
+                    <p class="section-desc">
+                        The combination of user research and technical audits confirmed significant accessibility barriers affecting core user journeys.
+                    </p>
+                </div>
+
+                <div class="findings-grid">
+                    <div class="finding-column">
+                        <h3 style="color: var(--accent-coral); margin-bottom: 1rem; font-family: 'Fraunces', serif;">Before Redesign</h3>
+                        <div class="finding-item">
+                            <div class="finding-header">
+                                <div class="finding-status fail">✗</div>
+                                <div class="finding-title">Body Text Contrast</div>
+                            </div>
+                            <div class="finding-detail">Text blends into background, causing eye strain</div>
+                            <div class="finding-metric">
+                                <span class="metric-label">Contrast Ratio</span>
+                                <span class="metric-value fail">3.2:1</span>
+                            </div>
+                        </div>
+                        <div class="finding-item">
+                            <div class="finding-header">
+                                <div class="finding-status fail">✗</div>
+                                <div class="finding-title">Form Labels</div>
+                            </div>
+                            <div class="finding-detail">Missing or vague labels break screen readers</div>
+                            <div class="finding-metric">
+                                <span class="metric-label">Contrast Ratio</span>
+                                <span class="metric-value fail">2.8:1</span>
+                            </div>
+                        </div>
+                        <div class="finding-item">
+                            <div class="finding-header">
+                                <div class="finding-status fail">✗</div>
+                                <div class="finding-title">Program Titles</div>
+                            </div>
+                            <div class="finding-detail">Users can't scan and find programs</div>
+                            <div class="finding-metric">
+                                <span class="metric-label">Contrast Ratio</span>
+                                <span class="metric-value fail">2.5:1</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="finding-column">
+                        <h3 style="color: var(--accent-mint); margin-bottom: 1rem; font-family: 'Fraunces', serif;">After Redesign</h3>
+                        <div class="finding-item">
+                            <div class="finding-header">
+                                <div class="finding-status pass">✓</div>
+                                <div class="finding-title">Body Text Contrast</div>
+                            </div>
+                            <div class="finding-detail">Clear, readable text throughout site</div>
+                            <div class="finding-metric">
+                                <span class="metric-label">Contrast Ratio</span>
+                                <span class="metric-value pass">7.05:1</span>
+                            </div>
+                        </div>
+                        <div class="finding-item">
+                            <div class="finding-header">
+                                <div class="finding-status pass">✓</div>
+                                <div class="finding-title">Form Labels</div>
+                            </div>
+                            <div class="finding-detail">Descriptive, screen reader-friendly labels</div>
+                            <div class="finding-metric">
+                                <span class="metric-label">Compliance</span>
+                                <span class="metric-value pass">WCAG AA</span>
+                            </div>
+                        </div>
+                        <div class="finding-item">
+                            <div class="finding-header">
+                                <div class="finding-status pass">✓</div>
+                                <div class="finding-title">Text Resize</div>
+                            </div>
+                            <div class="finding-detail">User-controlled sizing with clear controls</div>
+                            <div class="finding-metric">
+                                <span class="metric-label">User Control</span>
+                                <span class="metric-value pass">Enabled</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="quote-block">
+                    <p class="quote-text">Forms feel like a guessing game—I don't know what to enter.</p>
+                    <p class="quote-author">— Research Participant</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 6: Solutions -->
+        <section class="slide" id="solutions">
+            <div class="slide-content">
+                <div class="section-header">
+                    <span class="section-number">05 / Solutions</span>
+                    <h2 class="section-title">Research-Driven Recommendations</h2>
+                    <p class="section-desc">
+                        Based on findings from all research methods, I recommended three key accessibility improvements to address the identified barriers.
+                    </p>
+                </div>
+
+                <div class="solutions-grid">
+                    <div class="solution-card">
+                        <div class="solution-icon">🔤</div>
+                        <h3 class="solution-title">Text Resize Controls</h3>
+                        <p class="solution-desc">Added user-controlled text sizing with clear, labeled button that works independently of browser zoom.</p>
+                        <div class="solution-before-after">
+                            <div class="ba-item">
+                                <div class="ba-label">Before</div>
+                                <div class="ba-value before">No option</div>
+                            </div>
+                            <div class="ba-item">
+                                <div class="ba-label">After</div>
+                                <div class="ba-value after">A / A / A</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="solution-card">
+                        <div class="solution-icon">🎨</div>
+                        <h3 class="solution-title">Color Contrast Updates</h3>
+                        <p class="solution-desc">Adjusted all text/background combinations using WebAIM to meet WCAG 2.0 AA compliance.</p>
+                        <div class="solution-before-after">
+                            <div class="ba-item">
+                                <div class="ba-label">Before</div>
+                                <div class="ba-value before">2.97:1</div>
+                            </div>
+                            <div class="ba-item">
+                                <div class="ba-label">After</div>
+                                <div class="ba-value after">7.05:1</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="solution-card">
+                        <div class="solution-icon">🏷️</div>
+                        <h3 class="solution-title">Clear Form Labels</h3>
+                        <p class="solution-desc">Rewrote all form labels to be descriptive and properly associated for screen reader compatibility.</p>
+                        <div class="solution-before-after">
+                            <div class="ba-item">
+                                <div class="ba-label">Before</div>
+                                <div class="ba-value before">Missing</div>
+                            </div>
+                            <div class="ba-item">
+                                <div class="ba-label">After</div>
+                                <div class="ba-value after">100% Labeled</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 7: Collaboration -->
+        <section class="slide" id="collaboration">
+            <div class="slide-content">
+                <div class="section-header">
+                    <span class="section-number">06 / Collaboration</span>
+                    <h2 class="section-title">Working with the Team</h2>
+                    <p class="section-desc">
+                        I collaborated closely with the Marketing Director and Web Developer throughout the project, bridging research insights with implementation.
+                    </p>
+                </div>
+
+                <div class="collab-grid">
+                    <div class="collab-card">
+                        <div class="collab-role">
+                            <span class="collab-role-dot coral"></span>
+                            My Responsibilities
+                        </div>
+                        <h3 class="collab-title">UX Researcher</h3>
+                        <ul class="collab-activities">
+                            <li>Planned and conducted all user research activities</li>
+                            <li>Performed competitive analysis and accessibility audits</li>
+                            <li>Synthesized findings into actionable insights</li>
+                            <li>Created user personas and journey maps</li>
+                            <li>Led usability testing sessions (5 participants)</li>
+                            <li>Provided research insights for Figma design iterations</li>
+                            <li>Presented findings and secured stakeholder buy-in</li>
+                        </ul>
+                    </div>
+                    <div class="collab-card">
+                        <div class="collab-role">
+                            <span class="collab-role-dot lavender"></span>
+                            Team Collaboration
+                        </div>
+                        <h3 class="collab-title">Cross-functional Work</h3>
+                        <ul class="collab-activities">
+                            <li>Weekly syncs with Marketing Director on project goals</li>
+                            <li>Shared research findings to inform marketing strategy</li>
+                            <li>Worked with Web Developer on technical feasibility</li>
+                            <li>Translated research into developer-friendly specs</li>
+                            <li>Connected accessibility to NISRA's mission for buy-in</li>
+                            <li>Demonstrated sign-up impact to secure approval</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="section-header" style="margin-top: 4rem;">
+                    <h3 class="section-title" style="font-size: 1.5rem;">Tools Used</h3>
+                </div>
+                <div class="tools-grid">
+                    <span class="tool-tag">Zoom</span>
+                    <span class="tool-tag">Google Survey</span>
+                    <span class="tool-tag">Figma</span>
+                    <span class="tool-tag">Optimal Workshop</span>
+                    <span class="tool-tag">Miro</span>
+                    <span class="tool-tag">WebAIM Contrast Checker</span>
+                    <span class="tool-tag">WAVE</span>
+                    <span class="tool-tag">Browser Dev Tools</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 8: Results & Learnings -->
+        <section class="slide" id="results">
+            <div class="slide-content">
+                <div class="section-header">
+                    <span class="section-number">07 / Results & Learnings</span>
+                    <h2 class="section-title">Impact & Reflection</h2>
+                </div>
+
+                <div class="results-hero">
+                    <div class="results-stats">
+                        <div class="result-stat">
+                            <div class="result-stat-value coral">+20%</div>
+                            <div class="result-stat-label">Program Sign-ups</div>
+                        </div>
+                        <div class="result-stat">
+                            <div class="result-stat-value mint">85%</div>
+                            <div class="result-stat-label">Found Site Easier</div>
+                        </div>
+                        <div class="result-stat">
+                            <div class="result-stat-value lavender">100%</div>
+                            <div class="result-stat-label">WCAG Compliant</div>
+                        </div>
+                    </div>
+
+                    <div class="results-feedback">
+                        <div class="feedback-card">
+                            <p class="feedback-text">"The larger text made everything easier to read."</p>
+                            <p class="feedback-source">— Post-launch user feedback</p>
+                        </div>
+                        <div class="feedback-card">
+                            <p class="feedback-text">"I was finally able to sign up without needing help."</p>
+                            <p class="feedback-source">— Post-launch user feedback</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="section-header" style="margin-top: 4rem;">
+                    <h3 class="section-title" style="font-size: 1.5rem;">Key Learnings</h3>
+                </div>
+
+                <div class="learnings-grid">
+                    <div class="learning-card">
+                        <div class="learning-icon">💡</div>
+                        <h4 class="learning-title">User Feedback Drives Design</h4>
+                        <p class="learning-desc">Direct observation of users struggling with tasks provided the most compelling evidence for change.</p>
+                    </div>
+                    <div class="learning-card">
+                        <div class="learning-icon">📊</div>
+                        <h4 class="learning-title">Accessibility = Engagement</h4>
+                        <p class="learning-desc">Accessibility improvements directly correlated with increased sign-ups and user satisfaction.</p>
+                    </div>
+                    <div class="learning-card">
+                        <div class="learning-icon">🔄</div>
+                        <h4 class="learning-title">Iteration is Essential</h4>
+                        <p class="learning-desc">Multiple rounds of testing revealed issues the first round missed, improving final quality.</p>
+                    </div>
+                </div>
+
+                <div class="section-header" style="margin-top: 4rem;">
+                    <h3 class="section-title" style="font-size: 1.5rem;">What I'd Do Differently</h3>
+                </div>
+
+                <div class="learnings-grid">
+                    <div class="learning-card">
+                        <div class="learning-icon">👥</div>
+                        <h4 class="learning-title">Larger Sample</h4>
+                        <p class="learning-desc">Test with more participants across various types of visual impairments for broader coverage.</p>
+                    </div>
+                    <div class="learning-card">
+                        <div class="learning-icon">🔧</div>
+                        <h4 class="learning-title">Multiple AT Testing</h4>
+                        <p class="learning-desc">Validate with JAWS, NVDA, VoiceOver and other screen readers for compatibility.</p>
+                    </div>
+                    <div class="learning-card">
+                        <div class="learning-icon">🤝</div>
+                        <h4 class="learning-title">Expert Partnership</h4>
+                        <p class="learning-desc">Include accessibility specialists for validation beyond WCAG minimums.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
     </div>
-    
+
     <script>
-        let currentSlide = 0;
+        // Intersection Observer for slide animations
         const slides = document.querySelectorAll('.slide');
-        const totalSlides = slides.length;
-        
-        document.getElementById('totalSlides').textContent = totalSlides;
-        
-        function showSlide(n) {
-            slides.forEach(slide => {
-                slide.classList.remove('active', 'prev');
+        const dots = document.querySelectorAll('.slide-dot');
+        const navLinks = document.querySelectorAll('.nav-link');
+
+        const observerOptions = {
+            threshold: 0.3,
+            rootMargin: '-50px'
+        };
+
+        const slideObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                    
+                    // Update nav dots
+                    const slideIndex = Array.from(slides).indexOf(entry.target);
+                    dots.forEach((dot, index) => {
+                        dot.classList.toggle('active', index === slideIndex);
+                    });
+
+                    // Update nav links
+                    const sectionId = entry.target.id;
+                    navLinks.forEach(link => {
+                        const href = link.getAttribute('href');
+                        link.classList.toggle('active', href === `#${sectionId}`);
+                    });
+                }
             });
-            
-            if (n >= totalSlides) { currentSlide = 0; }
-            if (n < 0) { currentSlide = totalSlides - 1; }
-            
-            if (currentSlide > 0) {
-                slides[currentSlide - 1].classList.add('prev');
-            }
-            
-            slides[currentSlide].classList.add('active');
-            document.getElementById('currentSlide').textContent = currentSlide + 1;
-            document.getElementById('prevBtn').disabled = currentSlide === 0;
-            document.getElementById('nextBtn').disabled = currentSlide === totalSlides - 1;
-        }
-        
-        function changeSlide(direction) {
-            currentSlide += direction;
-            showSlide(currentSlide);
-        }
-        
+        }, observerOptions);
+
+        slides.forEach(slide => slideObserver.observe(slide));
+
+        // Dot navigation
+        dots.forEach(dot => {
+            dot.addEventListener('click', () => {
+                const slideIndex = parseInt(dot.dataset.slide);
+                slides[slideIndex].scrollIntoView({ behavior: 'smooth' });
+            });
+        });
+
+        // Smooth scroll for nav links
+        navLinks.forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                const targetId = link.getAttribute('href');
+                document.querySelector(targetId).scrollIntoView({ behavior: 'smooth' });
+            });
+        });
+
+        // Keyboard navigation
         document.addEventListener('keydown', (e) => {
-            if (e.key === 'ArrowRight' || e.key === ' ') {
-                if (currentSlide < totalSlides - 1) {
-                    changeSlide(1);
-                }
+            const currentSlide = Array.from(slides).findIndex(slide => 
+                slide.getBoundingClientRect().top >= -100 && 
+                slide.getBoundingClientRect().top <= window.innerHeight / 2
+            );
+
+            if (e.key === 'ArrowDown' || e.key === 'PageDown') {
                 e.preventDefault();
-            } else if (e.key === 'ArrowLeft') {
+                if (currentSlide < slides.length - 1) {
+                    slides[currentSlide + 1].scrollIntoView({ behavior: 'smooth' });
+                }
+            } else if (e.key === 'ArrowUp' || e.key === 'PageUp') {
+                e.preventDefault();
                 if (currentSlide > 0) {
-                    changeSlide(-1);
+                    slides[currentSlide - 1].scrollIntoView({ behavior: 'smooth' });
                 }
-                e.preventDefault();
             }
         });
-        
-        let touchStartX = 0;
-        let touchEndX = 0;
-        
-        document.addEventListener('touchstart', (e) => {
-            touchStartX = e.changedTouches[0].screenX;
-        });
-        
-        document.addEventListener('touchend', (e) => {
-            touchEndX = e.changedTouches[0].screenX;
-            handleSwipe();
-        });
-        
-        function handleSwipe() {
-            if (touchEndX < touchStartX - 50 && currentSlide < totalSlides - 1) {
-                changeSlide(1);
-            }
-            if (touchEndX > touchStartX + 50 && currentSlide > 0) {
-                changeSlide(-1);
-            }
-        }
-        
-        showSlide(currentSlide);
+
+        // Add stagger animation to cards
+        const animateCards = () => {
+            const cards = document.querySelectorAll('.overview-card, .challenge-card, .method-card, .solution-card, .learning-card');
+            cards.forEach((card, index) => {
+                card.style.transitionDelay = `${index * 0.1}s`;
+            });
+        };
+
+        animateCards();
     </script>
 </body>
 </html>
