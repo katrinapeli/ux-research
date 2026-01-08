@@ -1,1606 +1,193 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>UX Research Case Study | NISRA Web Accessibility</title>
-    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,700;1,9..40,400&family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700;1,9..144,400&display=swap" rel="stylesheet">
-    <style>
-        :root {
-            --bg-primary: #0a0a0f;
-            --bg-secondary: #12121a;
-            --bg-card: #1a1a24;
-            --accent-coral: #ff6b5b;
-            --accent-lavender: #a78bfa;
-            --accent-mint: #6ee7b7;
-            --accent-amber: #fbbf24;
-            --text-primary: #f8fafc;
-            --text-secondary: #94a3b8;
-            --text-muted: #64748b;
-            --border-subtle: rgba(255,255,255,0.08);
-            --gradient-coral: linear-gradient(135deg, #ff6b5b 0%, #ff8f7a 100%);
-            --gradient-lavender: linear-gradient(135deg, #a78bfa 0%, #c4b5fd 100%);
-            --gradient-mint: linear-gradient(135deg, #6ee7b7 0%, #a7f3d0 100%);
-        }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        html {
-            scroll-behavior: smooth;
-        }
-
-        body {
-            font-family: 'DM Sans', sans-serif;
-            background: var(--bg-primary);
-            color: var(--text-primary);
-            line-height: 1.7;
-            overflow-x: hidden;
-        }
-
-        /* Navigation */
-        .nav {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            z-index: 1000;
-            padding: 1rem 2rem;
-            background: rgba(10, 10, 15, 0.85);
-            backdrop-filter: blur(20px);
-            border-bottom: 1px solid var(--border-subtle);
-        }
-
-        .nav-inner {
-            max-width: 1400px;
-            margin: 0 auto;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .nav-logo {
-            font-family: 'Fraunces', serif;
-            font-size: 1.25rem;
-            font-weight: 600;
-            color: var(--text-primary);
-        }
-
-        .nav-links {
-            display: flex;
-            gap: 0.5rem;
-        }
-
-        .nav-link {
-            padding: 0.5rem 1rem;
-            font-size: 0.875rem;
-            color: var(--text-secondary);
-            text-decoration: none;
-            border-radius: 6px;
-            transition: all 0.3s ease;
-            cursor: pointer;
-        }
-
-        .nav-link:hover, .nav-link.active {
-            color: var(--text-primary);
-            background: var(--bg-card);
-        }
-
-        /* Slide Container */
-        .slides-container {
-            padding-top: 60px;
-        }
-
-        .slide {
-            min-height: 100vh;
-            padding: 6rem 2rem;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            opacity: 0;
-            transform: translateY(40px);
-            transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
-        }
-
-        .slide.visible {
-            opacity: 1;
-            transform: translateY(0);
-        }
-
-        .slide-content {
-            max-width: 1200px;
-            width: 100%;
-        }
-
-        /* Hero Section */
-        .hero {
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .hero::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            right: -20%;
-            width: 80%;
-            height: 150%;
-            background: radial-gradient(ellipse at center, rgba(167, 139, 250, 0.08) 0%, transparent 60%);
-            pointer-events: none;
-        }
-
-        .hero::after {
-            content: '';
-            position: absolute;
-            bottom: -30%;
-            left: -10%;
-            width: 60%;
-            height: 100%;
-            background: radial-gradient(ellipse at center, rgba(255, 107, 91, 0.06) 0%, transparent 50%);
-            pointer-events: none;
-        }
-
-        .hero-content {
-            position: relative;
-            z-index: 1;
-        }
-
-        .hero-eyebrow {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-            padding: 0.5rem 1rem;
-            background: var(--bg-card);
-            border-radius: 100px;
-            font-size: 0.875rem;
-            color: var(--accent-lavender);
-            margin-bottom: 2rem;
-            border: 1px solid var(--border-subtle);
-        }
-
-        .hero-eyebrow::before {
-            content: '';
-            width: 8px;
-            height: 8px;
-            background: var(--accent-lavender);
-            border-radius: 50%;
-            animation: pulse 2s infinite;
-        }
-
-        @keyframes pulse {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.5; }
-        }
-
-        .hero-title {
-            font-family: 'Fraunces', serif;
-            font-size: clamp(2.5rem, 6vw, 4.5rem);
-            font-weight: 700;
-            line-height: 1.1;
-            margin-bottom: 1.5rem;
-            letter-spacing: -0.02em;
-        }
-
-        .hero-title .highlight {
-            background: var(--gradient-coral);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-
-        .hero-subtitle {
-            font-size: 1.25rem;
-            color: var(--text-secondary);
-            max-width: 600px;
-            margin-bottom: 3rem;
-        }
-
-        /* Stats Row */
-        .stats-row {
-            display: flex;
-            gap: 3rem;
-            flex-wrap: wrap;
-        }
-
-        .stat-item {
-            display: flex;
-            flex-direction: column;
-            gap: 0.25rem;
-        }
-
-        .stat-value {
-            font-family: 'Fraunces', serif;
-            font-size: 2.5rem;
-            font-weight: 700;
-            background: var(--gradient-mint);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-
-        .stat-label {
-            font-size: 0.875rem;
-            color: var(--text-muted);
-            text-transform: uppercase;
-            letter-spacing: 0.1em;
-        }
-
-        /* Section Headers */
-        .section-header {
-            margin-bottom: 4rem;
-        }
-
-        .section-number {
-            font-family: 'Fraunces', serif;
-            font-size: 0.875rem;
-            color: var(--accent-coral);
-            margin-bottom: 1rem;
-            display: block;
-        }
-
-        .section-title {
-            font-family: 'Fraunces', serif;
-            font-size: clamp(2rem, 4vw, 3rem);
-            font-weight: 600;
-            margin-bottom: 1rem;
-            line-height: 1.2;
-        }
-
-        .section-desc {
-            font-size: 1.125rem;
-            color: var(--text-secondary);
-            max-width: 700px;
-        }
-
-        /* Overview Grid */
-        .overview-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 1.5rem;
-            margin-top: 3rem;
-        }
-
-        .overview-card {
-            background: var(--bg-card);
-            border: 1px solid var(--border-subtle);
-            border-radius: 16px;
-            padding: 2rem;
-            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-        }
-
-        .overview-card:hover {
-            transform: translateY(-4px);
-            border-color: rgba(255,255,255,0.15);
-            box-shadow: 0 20px 40px -20px rgba(0,0,0,0.5);
-        }
-
-        .overview-card-icon {
-            width: 48px;
-            height: 48px;
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.5rem;
-            margin-bottom: 1.5rem;
-        }
-
-        .overview-card-icon.coral { background: rgba(255, 107, 91, 0.15); }
-        .overview-card-icon.lavender { background: rgba(167, 139, 250, 0.15); }
-        .overview-card-icon.mint { background: rgba(110, 231, 183, 0.15); }
-        .overview-card-icon.amber { background: rgba(251, 191, 36, 0.15); }
-
-        .overview-card-title {
-            font-size: 0.75rem;
-            text-transform: uppercase;
-            letter-spacing: 0.1em;
-            color: var(--text-muted);
-            margin-bottom: 0.5rem;
-        }
-
-        .overview-card-value {
-            font-size: 1.125rem;
-            font-weight: 500;
-        }
-
-        /* Process Timeline */
-        .process-timeline {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 2rem;
-            margin-top: 3rem;
-        }
-
-        .process-step {
-            position: relative;
-            padding: 2rem;
-            background: var(--bg-card);
-            border: 1px solid var(--border-subtle);
-            border-radius: 16px;
-            transition: all 0.4s ease;
-        }
-
-        .process-step::before {
-            content: '';
-            position: absolute;
-            top: 50%;
-            right: -2rem;
-            width: 2rem;
-            height: 2px;
-            background: var(--border-subtle);
-        }
-
-        .process-step:last-child::before {
-            display: none;
-        }
-
-        .process-step:hover {
-            border-color: var(--accent-lavender);
-            transform: translateY(-4px);
-        }
-
-        .process-phase {
-            display: inline-block;
-            padding: 0.25rem 0.75rem;
-            background: rgba(167, 139, 250, 0.15);
-            color: var(--accent-lavender);
-            border-radius: 100px;
-            font-size: 0.75rem;
-            font-weight: 500;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-            margin-bottom: 1rem;
-        }
-
-        .process-title {
-            font-family: 'Fraunces', serif;
-            font-size: 1.25rem;
-            font-weight: 600;
-            margin-bottom: 0.75rem;
-        }
-
-        .process-methods {
-            list-style: none;
-            font-size: 0.875rem;
-            color: var(--text-secondary);
-        }
-
-        .process-methods li {
-            padding: 0.25rem 0;
-            padding-left: 1.25rem;
-            position: relative;
-        }
-
-        .process-methods li::before {
-            content: '→';
-            position: absolute;
-            left: 0;
-            color: var(--accent-coral);
-        }
-
-        /* Challenges Grid */
-        .challenges-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 2rem;
-            margin-top: 3rem;
-        }
-
-        .challenge-card {
-            background: var(--bg-card);
-            border: 1px solid var(--border-subtle);
-            border-radius: 16px;
-            padding: 2rem;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .challenge-card::before {
-            content: attr(data-number);
-            position: absolute;
-            top: 1rem;
-            right: 1.5rem;
-            font-family: 'Fraunces', serif;
-            font-size: 4rem;
-            font-weight: 700;
-            color: rgba(255,255,255,0.03);
-        }
-
-        .challenge-icon {
-            font-size: 2rem;
-            margin-bottom: 1rem;
-        }
-
-        .challenge-title {
-            font-family: 'Fraunces', serif;
-            font-size: 1.25rem;
-            font-weight: 600;
-            margin-bottom: 1rem;
-            color: var(--accent-coral);
-        }
-
-        .challenge-desc {
-            font-size: 0.9375rem;
-            color: var(--text-secondary);
-            line-height: 1.6;
-        }
-
-        /* Research Methods */
-        .methods-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 2rem;
-            margin-top: 3rem;
-        }
-
-        .method-card {
-            background: var(--bg-card);
-            border: 1px solid var(--border-subtle);
-            border-radius: 16px;
-            padding: 2.5rem;
-            display: grid;
-            grid-template-columns: auto 1fr;
-            gap: 2rem;
-            align-items: start;
-            transition: all 0.4s ease;
-        }
-
-        .method-card:hover {
-            border-color: rgba(255,255,255,0.15);
-        }
-
-        .method-number {
-            font-family: 'Fraunces', serif;
-            font-size: 3rem;
-            font-weight: 700;
-            color: var(--accent-lavender);
-            line-height: 1;
-        }
-
-        .method-content h3 {
-            font-family: 'Fraunces', serif;
-            font-size: 1.5rem;
-            font-weight: 600;
-            margin-bottom: 0.75rem;
-        }
-
-        .method-content p {
-            font-size: 0.9375rem;
-            color: var(--text-secondary);
-            margin-bottom: 1.5rem;
-        }
-
-        .method-details {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 0.5rem;
-        }
-
-        .method-tag {
-            padding: 0.375rem 0.75rem;
-            background: var(--bg-secondary);
-            border-radius: 6px;
-            font-size: 0.8125rem;
-            color: var(--text-secondary);
-        }
-
-        /* Findings Section */
-        .findings-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 3rem;
-            margin-top: 3rem;
-        }
-
-        .finding-column {
-            display: flex;
-            flex-direction: column;
-            gap: 1.5rem;
-        }
-
-        .finding-item {
-            background: var(--bg-card);
-            border: 1px solid var(--border-subtle);
-            border-radius: 12px;
-            padding: 1.5rem;
-        }
-
-        .finding-header {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-            margin-bottom: 1rem;
-        }
-
-        .finding-status {
-            width: 32px;
-            height: 32px;
-            border-radius: 8px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1rem;
-        }
-
-        .finding-status.fail {
-            background: rgba(255, 107, 91, 0.15);
-        }
-
-        .finding-status.pass {
-            background: rgba(110, 231, 183, 0.15);
-        }
-
-        .finding-title {
-            font-weight: 600;
-            font-size: 1rem;
-        }
-
-        .finding-detail {
-            font-size: 0.875rem;
-            color: var(--text-secondary);
-        }
-
-        .finding-metric {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding-top: 1rem;
-            border-top: 1px solid var(--border-subtle);
-            margin-top: 1rem;
-        }
-
-        .metric-label {
-            font-size: 0.8125rem;
-            color: var(--text-muted);
-        }
-
-        .metric-value {
-            font-family: 'Fraunces', serif;
-            font-weight: 600;
-        }
-
-        .metric-value.fail {
-            color: var(--accent-coral);
-        }
-
-        .metric-value.pass {
-            color: var(--accent-mint);
-        }
-
-        /* Quote Block */
-        .quote-block {
-            background: linear-gradient(135deg, rgba(167, 139, 250, 0.1) 0%, rgba(110, 231, 183, 0.05) 100%);
-            border: 1px solid var(--border-subtle);
-            border-radius: 20px;
-            padding: 3rem;
-            margin: 3rem 0;
-            position: relative;
-        }
-
-        .quote-block::before {
-            content: '"';
-            font-family: 'Fraunces', serif;
-            font-size: 6rem;
-            color: var(--accent-lavender);
-            opacity: 0.3;
-            position: absolute;
-            top: 1rem;
-            left: 2rem;
-            line-height: 1;
-        }
-
-        .quote-text {
-            font-family: 'Fraunces', serif;
-            font-size: 1.5rem;
-            font-style: italic;
-            line-height: 1.6;
-            margin-bottom: 1.5rem;
-            position: relative;
-            z-index: 1;
-        }
-
-        .quote-author {
-            font-size: 0.875rem;
-            color: var(--text-muted);
-        }
-
-        /* Solutions Grid */
-        .solutions-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 2rem;
-            margin-top: 3rem;
-        }
-
-        .solution-card {
-            background: var(--bg-card);
-            border: 1px solid var(--border-subtle);
-            border-radius: 16px;
-            padding: 2rem;
-            transition: all 0.4s ease;
-        }
-
-        .solution-card:hover {
-            transform: translateY(-4px);
-            border-color: var(--accent-mint);
-        }
-
-        .solution-icon {
-            width: 56px;
-            height: 56px;
-            border-radius: 12px;
-            background: rgba(110, 231, 183, 0.1);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.5rem;
-            margin-bottom: 1.5rem;
-        }
-
-        .solution-title {
-            font-family: 'Fraunces', serif;
-            font-size: 1.25rem;
-            font-weight: 600;
-            margin-bottom: 0.75rem;
-        }
-
-        .solution-desc {
-            font-size: 0.9375rem;
-            color: var(--text-secondary);
-            margin-bottom: 1.5rem;
-        }
-
-        .solution-before-after {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 1rem;
-            padding-top: 1rem;
-            border-top: 1px solid var(--border-subtle);
-        }
-
-        .ba-item {
-            text-align: center;
-        }
-
-        .ba-label {
-            font-size: 0.6875rem;
-            text-transform: uppercase;
-            letter-spacing: 0.1em;
-            color: var(--text-muted);
-            margin-bottom: 0.25rem;
-        }
-
-        .ba-value {
-            font-family: 'Fraunces', serif;
-            font-size: 1.125rem;
-            font-weight: 600;
-        }
-
-        .ba-value.before {
-            color: var(--accent-coral);
-        }
-
-        .ba-value.after {
-            color: var(--accent-mint);
-        }
-
-        /* Collaboration Section */
-        .collab-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 3rem;
-            margin-top: 3rem;
-        }
-
-        .collab-card {
-            background: var(--bg-card);
-            border: 1px solid var(--border-subtle);
-            border-radius: 16px;
-            padding: 2.5rem;
-        }
-
-        .collab-role {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-            padding: 0.5rem 1rem;
-            background: var(--bg-secondary);
-            border-radius: 100px;
-            font-size: 0.875rem;
-            margin-bottom: 1.5rem;
-        }
-
-        .collab-role-dot {
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-        }
-
-        .collab-role-dot.coral { background: var(--accent-coral); }
-        .collab-role-dot.lavender { background: var(--accent-lavender); }
-
-        .collab-title {
-            font-family: 'Fraunces', serif;
-            font-size: 1.5rem;
-            font-weight: 600;
-            margin-bottom: 1rem;
-        }
-
-        .collab-activities {
-            list-style: none;
-        }
-
-        .collab-activities li {
-            padding: 0.75rem 0;
-            border-bottom: 1px solid var(--border-subtle);
-            font-size: 0.9375rem;
-            color: var(--text-secondary);
-            display: flex;
-            align-items: flex-start;
-            gap: 0.75rem;
-        }
-
-        .collab-activities li:last-child {
-            border-bottom: none;
-        }
-
-        .collab-activities li::before {
-            content: '✓';
-            color: var(--accent-mint);
-            font-weight: 600;
-        }
-
-        /* Results Section */
-        .results-hero {
-            background: linear-gradient(135deg, var(--bg-card) 0%, var(--bg-secondary) 100%);
-            border: 1px solid var(--border-subtle);
-            border-radius: 24px;
-            padding: 4rem;
-            text-align: center;
-            margin-top: 3rem;
-        }
-
-        .results-stats {
-            display: flex;
-            justify-content: center;
-            gap: 6rem;
-            margin-bottom: 3rem;
-        }
-
-        .result-stat {
-            text-align: center;
-        }
-
-        .result-stat-value {
-            font-family: 'Fraunces', serif;
-            font-size: 4rem;
-            font-weight: 700;
-            line-height: 1;
-            margin-bottom: 0.5rem;
-        }
-
-        .result-stat-value.coral {
-            background: var(--gradient-coral);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-
-        .result-stat-value.mint {
-            background: var(--gradient-mint);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-
-        .result-stat-value.lavender {
-            background: var(--gradient-lavender);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-
-        .result-stat-label {
-            font-size: 0.875rem;
-            color: var(--text-muted);
-            text-transform: uppercase;
-            letter-spacing: 0.1em;
-        }
-
-        .results-feedback {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 2rem;
-            margin-top: 3rem;
-        }
-
-        .feedback-card {
-            background: var(--bg-secondary);
-            border-radius: 12px;
-            padding: 2rem;
-            text-align: left;
-        }
-
-        .feedback-text {
-            font-family: 'Fraunces', serif;
-            font-size: 1.125rem;
-            font-style: italic;
-            margin-bottom: 1rem;
-        }
-
-        .feedback-source {
-            font-size: 0.8125rem;
-            color: var(--text-muted);
-        }
-
-        /* Learnings Grid */
-        .learnings-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 2rem;
-            margin-top: 3rem;
-        }
-
-        .learning-card {
-            background: var(--bg-card);
-            border: 1px solid var(--border-subtle);
-            border-radius: 16px;
-            padding: 2rem;
-        }
-
-        .learning-icon {
-            font-size: 2rem;
-            margin-bottom: 1rem;
-        }
-
-        .learning-title {
-            font-family: 'Fraunces', serif;
-            font-size: 1.125rem;
-            font-weight: 600;
-            margin-bottom: 0.75rem;
-        }
-
-        .learning-desc {
-            font-size: 0.9375rem;
-            color: var(--text-secondary);
-        }
-
-        /* Tools Section */
-        .tools-grid {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 1rem;
-            margin-top: 2rem;
-        }
-
-        .tool-tag {
-            padding: 0.75rem 1.5rem;
-            background: var(--bg-card);
-            border: 1px solid var(--border-subtle);
-            border-radius: 100px;
-            font-size: 0.9375rem;
-            transition: all 0.3s ease;
-        }
-
-        .tool-tag:hover {
-            border-color: var(--accent-lavender);
-            transform: translateY(-2px);
-        }
-
-        /* Slide Navigation */
-        .slide-nav {
-            position: fixed;
-            right: 2rem;
-            top: 50%;
-            transform: translateY(-50%);
-            display: flex;
-            flex-direction: column;
-            gap: 0.75rem;
-            z-index: 100;
-        }
-
-        .slide-dot {
-            width: 12px;
-            height: 12px;
-            border-radius: 50%;
-            background: var(--bg-card);
-            border: 2px solid var(--border-subtle);
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .slide-dot:hover {
-            border-color: var(--accent-lavender);
-        }
-
-        .slide-dot.active {
-            background: var(--accent-lavender);
-            border-color: var(--accent-lavender);
-        }
-
-        /* Responsive */
-        @media (max-width: 1024px) {
-            .process-timeline {
-                grid-template-columns: repeat(2, 1fr);
-            }
-
-            .process-step::before {
-                display: none;
-            }
-
-            .challenges-grid,
-            .solutions-grid,
-            .learnings-grid {
-                grid-template-columns: repeat(2, 1fr);
-            }
-
-            .methods-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .results-stats {
-                gap: 3rem;
-            }
-
-            .slide-nav {
-                display: none;
-            }
-        }
-
-        @media (max-width: 768px) {
-            .nav-links {
-                display: none;
-            }
-
-            .slide {
-                padding: 4rem 1.5rem;
-            }
-
-            .process-timeline,
-            .challenges-grid,
-            .solutions-grid,
-            .collab-grid,
-            .findings-grid,
-            .learnings-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .results-stats {
-                flex-direction: column;
-                gap: 2rem;
-            }
-
-            .results-feedback {
-                grid-template-columns: 1fr;
-            }
-
-            .stats-row {
-                gap: 2rem;
-            }
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>UX Research Case Study – Web Accessibility</title>
+
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Fraunces:wght@400;600;700&display=swap" rel="stylesheet">
+
+<style>
+:root {
+  --bg-primary:#0a0a0f;
+  --bg-secondary:#12121a;
+  --bg-card:#1a1a24;
+  --accent-blue:#3b82f6;
+  --accent-cyan:#06b6d4;
+  --accent-violet:#8b5cf6;
+  --text-primary:#f8fafc;
+  --text-secondary:#94a3b8;
+  --text-muted:#64748b;
+  --gradient-1:linear-gradient(135deg,#3b82f6,#8b5cf6);
+}
+
+*{margin:0;padding:0;box-sizing:border-box}
+body{
+  font-family:'DM Sans',sans-serif;
+  background:var(--bg-primary);
+  color:var(--text-primary);
+  line-height:1.7;
+}
+
+/* Navigation */
+.nav{
+  position:fixed;
+  top:0;left:0;right:0;
+  z-index:1000;
+  padding:1rem 2rem;
+  background:rgba(10,10,15,.85);
+  backdrop-filter:blur(20px);
+  border-bottom:1px solid rgba(255,255,255,.05);
+}
+.nav-inner{
+  max-width:1400px;
+  margin:0 auto;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+}
+.nav-logo{
+  font-family:'Fraunces',serif;
+  font-weight:600;
+  background:var(--gradient-1);
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+}
+
+/* Sections */
+.section{
+  min-height:100vh;
+  padding:8rem 2rem 4rem;
+  display:flex;
+  align-items:center;
+}
+.section-inner{
+  max-width:1200px;
+  margin:0 auto;
+  width:100%;
+}
+
+/* HERO */
+.hero{
+  background:
+    radial-gradient(ellipse at 20% 50%, rgba(59,130,246,.15), transparent 50%),
+    radial-gradient(ellipse at 80% 80%, rgba(139,92,246,.12), transparent 50%),
+    var(--bg-primary);
+}
+
+.hero-content{
+  display:grid;
+  grid-template-columns:1.2fr 1fr;
+  gap:4rem;
+  align-items:center;
+}
+
+.hero-badge{
+  display:inline-block;
+  padding:.5rem 1rem;
+  border-radius:100px;
+  font-size:.85rem;
+  background:rgba(59,130,246,.15);
+  color:var(--accent-blue);
+  border:1px solid rgba(59,130,246,.3);
+  margin-bottom:1.5rem;
+}
+
+.hero h1{
+  font-family:'Fraunces',serif;
+  font-size:clamp(2.6rem,5vw,4rem);
+  line-height:1.1;
+  margin-bottom:1.5rem;
+}
+.hero h1 span{
+  background:var(--gradient-1);
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+}
+
+.hero-description{
+  font-size:1.1rem;
+  color:var(--text-secondary);
+  max-width:520px;
+}
+
+/* HERO IMAGE */
+.hero-visual{
+  display:flex;
+  justify-content:center;
+  animation:fadeInRight .8s ease both;
+}
+
+.hero-image-wrapper{
+  position:relative;
+  max-width:480px;
+  border-radius:24px;
+  overflow:hidden;
+  box-shadow:
+    0 40px 80px rgba(0,0,0,.5),
+    0 0 0 1px rgba(255,255,255,.06);
+}
+
+.hero-image-wrapper img{
+  width:100%;
+  height:auto;
+  display:block;
+}
+
+/* Animations */
+@keyframes fadeInRight{
+  from{opacity:0;transform:translateX(50px)}
+  to{opacity:1;transform:translateX(0)}
+}
+
+/* Responsive */
+@media(max-width:1024px){
+  .hero-content{
+    grid-template-columns:1fr;
+    text-align:center;
+  }
+  .hero-visual{display:none}
+}
+</style>
 </head>
+
 <body>
-    <!-- Navigation -->
-    <nav class="nav">
-        <div class="nav-inner">
-            <div class="nav-logo">UX Case Study</div>
-            <div class="nav-links">
-                <a href="#overview" class="nav-link">Overview</a>
-                <a href="#process" class="nav-link">Process</a>
-                <a href="#research" class="nav-link">Research</a>
-                <a href="#findings" class="nav-link">Findings</a>
-                <a href="#solutions" class="nav-link">Solutions</a>
-                <a href="#collaboration" class="nav-link">Team</a>
-                <a href="#results" class="nav-link">Results</a>
-            </div>
+
+<nav class="nav">
+  <div class="nav-inner">
+    <div class="nav-logo">Case Study</div>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="section hero">
+  <div class="section-inner">
+    <div class="hero-content">
+
+      <!-- LEFT -->
+      <div class="hero-text">
+        <span class="hero-badge">UX Research Case Study</span>
+        <h1>Improving Web <span>Accessibility</span><br>Through UX Research</h1>
+        <p class="hero-description">
+          I led accessibility-focused UX research to identify usability barriers,
+          align WCAG standards with real user needs, and deliver design
+          recommendations that improved clarity, navigation, and inclusion.
+        </p>
+      </div>
+
+      <!-- RIGHT IMAGE -->
+      <div class="hero-visual">
+        <div class="hero-image-wrapper">
+          <img
+            src="https://freeimage.host/i/feuVNFp"
+            alt="Accessibility UX Research Mockup"
+          />
         </div>
-    </nav>
+      </div>
 
-    <!-- Slide Navigation Dots -->
-    <div class="slide-nav">
-        <div class="slide-dot active" data-slide="0"></div>
-        <div class="slide-dot" data-slide="1"></div>
-        <div class="slide-dot" data-slide="2"></div>
-        <div class="slide-dot" data-slide="3"></div>
-        <div class="slide-dot" data-slide="4"></div>
-        <div class="slide-dot" data-slide="5"></div>
-        <div class="slide-dot" data-slide="6"></div>
-        <div class="slide-dot" data-slide="7"></div>
     </div>
+  </div>
+</section>
 
-    <div class="slides-container">
-        <!-- Slide 1: Hero -->
-        <section class="slide hero visible" id="hero">
-            <div class="slide-content hero-content">
-                <div class="hero-eyebrow">UX Research Case Study</div>
-                <h1 class="hero-title">
-                    Improving Web Accessibility<br>
-                    Through <span class="highlight">UX Research</span>
-                </h1>
-                <p class="hero-subtitle">
-                    Led accessibility research for NISRA's website, identifying barriers for visually impaired users and recommending solutions that increased program sign-ups by 20%.
-                </p>
-                <div class="stats-row">
-                    <div class="stat-item">
-                        <span class="stat-value">+20%</span>
-                        <span class="stat-label">Sign-up Increase</span>
-                    </div>
-                    <div class="stat-item">
-                        <span class="stat-value">85%</span>
-                        <span class="stat-label">Easier to Use</span>
-                    </div>
-                    <div class="stat-item">
-                        <span class="stat-value">100%</span>
-                        <span class="stat-label">WCAG 2.0 AA</span>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Slide 2: Project Overview -->
-        <section class="slide" id="overview">
-            <div class="slide-content">
-                <div class="section-header">
-                    <span class="section-number">01 / Project Overview</span>
-                    <h2 class="section-title">The Challenge</h2>
-                    <p class="section-desc">
-                        The Northern Illinois Special Recreation Association (NISRA) provides recreation programs for individuals with disabilities. However, their website failed basic accessibility standards—preventing visually impaired users from signing up independently.
-                    </p>
-                </div>
-
-                <div class="overview-grid">
-                    <div class="overview-card">
-                        <div class="overview-card-icon coral">👤</div>
-                        <div class="overview-card-title">My Role</div>
-                        <div class="overview-card-value">UX Researcher</div>
-                    </div>
-                    <div class="overview-card">
-                        <div class="overview-card-icon lavender">👥</div>
-                        <div class="overview-card-title">Team</div>
-                        <div class="overview-card-value">1 Marketing Director, 1 Web Developer</div>
-                    </div>
-                    <div class="overview-card">
-                        <div class="overview-card-icon mint">📅</div>
-                        <div class="overview-card-title">Duration</div>
-                        <div class="overview-card-value">May 2019 – August 2020</div>
-                    </div>
-                    <div class="overview-card">
-                        <div class="overview-card-icon amber">🎯</div>
-                        <div class="overview-card-title">Scope</div>
-                        <div class="overview-card-value">Research, Testing, Recommendations</div>
-                    </div>
-                </div>
-
-                <div class="challenges-grid">
-                    <div class="challenge-card" data-number="1">
-                        <div class="challenge-icon">📝</div>
-                        <h3 class="challenge-title">Small Text Size</h3>
-                        <p class="challenge-desc">Users with low vision couldn't read program details or form fields, requiring assistance to navigate basic tasks.</p>
-                    </div>
-                    <div class="challenge-card" data-number="2">
-                        <div class="challenge-icon">🎨</div>
-                        <h3 class="challenge-title">Poor Color Contrast</h3>
-                        <p class="challenge-desc">Text blended into backgrounds, failing WCAG standards (below 4.5:1 ratio). Users described it as "straining to read."</p>
-                    </div>
-                    <div class="challenge-card" data-number="3">
-                        <div class="challenge-icon">🏷️</div>
-                        <h3 class="challenge-title">Unclear Form Labels</h3>
-                        <p class="challenge-desc">Sign-up fields lacked descriptive labels, causing confusion and screen reader incompatibility. Users called it "a guessing game."</p>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Slide 3: UX Process -->
-        <section class="slide" id="process">
-            <div class="slide-content">
-                <div class="section-header">
-                    <span class="section-number">02 / UX Process</span>
-                    <h2 class="section-title">Double Diamond Approach</h2>
-                    <p class="section-desc">
-                        I followed a structured research process, moving from understanding users to implementing and validating solutions.
-                    </p>
-                </div>
-
-                <div class="process-timeline">
-                    <div class="process-step">
-                        <div class="process-phase">Discover</div>
-                        <h3 class="process-title">Research</h3>
-                        <ul class="process-methods">
-                            <li>Competitive Analysis</li>
-                            <li>Observation</li>
-                            <li>Contextual Inquiry</li>
-                            <li>User Interviews</li>
-                        </ul>
-                    </div>
-                    <div class="process-step">
-                        <div class="process-phase">Define</div>
-                        <h3 class="process-title">Synthesize</h3>
-                        <ul class="process-methods">
-                            <li>User Persona</li>
-                            <li>Journey Mapping</li>
-                            <li>Affinity Diagrams</li>
-                            <li>Problem Statement</li>
-                        </ul>
-                    </div>
-                    <div class="process-step">
-                        <div class="process-phase">Develop</div>
-                        <h3 class="process-title">Ideate</h3>
-                        <ul class="process-methods">
-                            <li>Brainstorming</li>
-                            <li>Sketching</li>
-                            <li>Prototyping</li>
-                            <li>Design Handoff</li>
-                        </ul>
-                    </div>
-                    <div class="process-step">
-                        <div class="process-phase">Deliver</div>
-                        <h3 class="process-title">Validate</h3>
-                        <ul class="process-methods">
-                            <li>Usability Testing</li>
-                            <li>Iteration</li>
-                            <li>User Survey</li>
-                            <li>Impact Analysis</li>
-                        </ul>
-                    </div>
-                </div>
-
-                <div class="quote-block">
-                    <p class="quote-text">How might we improve website accessibility so users with visual impairments can read content, navigate pages, and complete tasks without frustration or assistance?</p>
-                    <p class="quote-author">— Problem Statement</p>
-                </div>
-            </div>
-        </section>
-
-        <!-- Slide 4: Research Methods -->
-        <section class="slide" id="research">
-            <div class="slide-content">
-                <div class="section-header">
-                    <span class="section-number">03 / Research Methods</span>
-                    <h2 class="section-title">Understanding Users & Context</h2>
-                    <p class="section-desc">
-                        I employed multiple research methods to gather comprehensive insights about accessibility barriers and user needs.
-                    </p>
-                </div>
-
-                <div class="methods-grid">
-                    <div class="method-card">
-                        <div class="method-number">01</div>
-                        <div class="method-content">
-                            <h3>Competitive Analysis</h3>
-                            <p>Benchmarked NISRA against NWSRA and FVSRA to identify accessibility feature gaps and industry best practices.</p>
-                            <div class="method-details">
-                                <span class="method-tag">2 Competitors</span>
-                                <span class="method-tag">5 Features Compared</span>
-                                <span class="method-tag">WCAG Audit</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="method-card">
-                        <div class="method-number">02</div>
-                        <div class="method-content">
-                            <h3>Contextual Inquiries</h3>
-                            <p>Observed 10 participants with visual impairments interacting with the website via Zoom, watching them attempt real tasks.</p>
-                            <div class="method-details">
-                                <span class="method-tag">10 Participants</span>
-                                <span class="method-tag">Remote via Zoom</span>
-                                <span class="method-tag">Task-based</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="method-card">
-                        <div class="method-number">03</div>
-                        <div class="method-content">
-                            <h3>Semi-Structured Interviews</h3>
-                            <p>Conducted 10 in-depth interviews with registered and non-registered NISRA users to understand pain points and needs.</p>
-                            <div class="method-details">
-                                <span class="method-tag">10 Interviews</span>
-                                <span class="method-tag">Mixed Users</span>
-                                <span class="method-tag">Open-ended Questions</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="method-card">
-                        <div class="method-number">04</div>
-                        <div class="method-content">
-                            <h3>Accessibility Audit</h3>
-                            <p>Used WebAIM's Contrast Checker and WCAG 2.0 AA guidelines to objectively document specific accessibility failures.</p>
-                            <div class="method-details">
-                                <span class="method-tag">WebAIM Tools</span>
-                                <span class="method-tag">WCAG 2.0 AA</span>
-                                <span class="method-tag">Contrast Ratios</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Slide 5: Key Findings -->
-        <section class="slide" id="findings">
-            <div class="slide-content">
-                <div class="section-header">
-                    <span class="section-number">04 / Key Findings</span>
-                    <h2 class="section-title">What the Research Revealed</h2>
-                    <p class="section-desc">
-                        The combination of user research and technical audits confirmed significant accessibility barriers affecting core user journeys.
-                    </p>
-                </div>
-
-                <div class="findings-grid">
-                    <div class="finding-column">
-                        <h3 style="color: var(--accent-coral); margin-bottom: 1rem; font-family: 'Fraunces', serif;">Before Redesign</h3>
-                        <div class="finding-item">
-                            <div class="finding-header">
-                                <div class="finding-status fail">✗</div>
-                                <div class="finding-title">Body Text Contrast</div>
-                            </div>
-                            <div class="finding-detail">Text blends into background, causing eye strain</div>
-                            <div class="finding-metric">
-                                <span class="metric-label">Contrast Ratio</span>
-                                <span class="metric-value fail">3.2:1</span>
-                            </div>
-                        </div>
-                        <div class="finding-item">
-                            <div class="finding-header">
-                                <div class="finding-status fail">✗</div>
-                                <div class="finding-title">Form Labels</div>
-                            </div>
-                            <div class="finding-detail">Missing or vague labels break screen readers</div>
-                            <div class="finding-metric">
-                                <span class="metric-label">Contrast Ratio</span>
-                                <span class="metric-value fail">2.8:1</span>
-                            </div>
-                        </div>
-                        <div class="finding-item">
-                            <div class="finding-header">
-                                <div class="finding-status fail">✗</div>
-                                <div class="finding-title">Program Titles</div>
-                            </div>
-                            <div class="finding-detail">Users can't scan and find programs</div>
-                            <div class="finding-metric">
-                                <span class="metric-label">Contrast Ratio</span>
-                                <span class="metric-value fail">2.5:1</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="finding-column">
-                        <h3 style="color: var(--accent-mint); margin-bottom: 1rem; font-family: 'Fraunces', serif;">After Redesign</h3>
-                        <div class="finding-item">
-                            <div class="finding-header">
-                                <div class="finding-status pass">✓</div>
-                                <div class="finding-title">Body Text Contrast</div>
-                            </div>
-                            <div class="finding-detail">Clear, readable text throughout site</div>
-                            <div class="finding-metric">
-                                <span class="metric-label">Contrast Ratio</span>
-                                <span class="metric-value pass">7.05:1</span>
-                            </div>
-                        </div>
-                        <div class="finding-item">
-                            <div class="finding-header">
-                                <div class="finding-status pass">✓</div>
-                                <div class="finding-title">Form Labels</div>
-                            </div>
-                            <div class="finding-detail">Descriptive, screen reader-friendly labels</div>
-                            <div class="finding-metric">
-                                <span class="metric-label">Compliance</span>
-                                <span class="metric-value pass">WCAG AA</span>
-                            </div>
-                        </div>
-                        <div class="finding-item">
-                            <div class="finding-header">
-                                <div class="finding-status pass">✓</div>
-                                <div class="finding-title">Text Resize</div>
-                            </div>
-                            <div class="finding-detail">User-controlled sizing with clear controls</div>
-                            <div class="finding-metric">
-                                <span class="metric-label">User Control</span>
-                                <span class="metric-value pass">Enabled</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="quote-block">
-                    <p class="quote-text">Forms feel like a guessing game—I don't know what to enter.</p>
-                    <p class="quote-author">— Research Participant</p>
-                </div>
-            </div>
-        </section>
-
-        <!-- Slide 6: Solutions -->
-        <section class="slide" id="solutions">
-            <div class="slide-content">
-                <div class="section-header">
-                    <span class="section-number">05 / Solutions</span>
-                    <h2 class="section-title">Research-Driven Recommendations</h2>
-                    <p class="section-desc">
-                        Based on findings from all research methods, I recommended three key accessibility improvements to address the identified barriers.
-                    </p>
-                </div>
-
-                <div class="solutions-grid">
-                    <div class="solution-card">
-                        <div class="solution-icon">🔤</div>
-                        <h3 class="solution-title">Text Resize Controls</h3>
-                        <p class="solution-desc">Added user-controlled text sizing with clear, labeled button that works independently of browser zoom.</p>
-                        <div class="solution-before-after">
-                            <div class="ba-item">
-                                <div class="ba-label">Before</div>
-                                <div class="ba-value before">No option</div>
-                            </div>
-                            <div class="ba-item">
-                                <div class="ba-label">After</div>
-                                <div class="ba-value after">A / A / A</div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="solution-card">
-                        <div class="solution-icon">🎨</div>
-                        <h3 class="solution-title">Color Contrast Updates</h3>
-                        <p class="solution-desc">Adjusted all text/background combinations using WebAIM to meet WCAG 2.0 AA compliance.</p>
-                        <div class="solution-before-after">
-                            <div class="ba-item">
-                                <div class="ba-label">Before</div>
-                                <div class="ba-value before">2.97:1</div>
-                            </div>
-                            <div class="ba-item">
-                                <div class="ba-label">After</div>
-                                <div class="ba-value after">7.05:1</div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="solution-card">
-                        <div class="solution-icon">🏷️</div>
-                        <h3 class="solution-title">Clear Form Labels</h3>
-                        <p class="solution-desc">Rewrote all form labels to be descriptive and properly associated for screen reader compatibility.</p>
-                        <div class="solution-before-after">
-                            <div class="ba-item">
-                                <div class="ba-label">Before</div>
-                                <div class="ba-value before">Missing</div>
-                            </div>
-                            <div class="ba-item">
-                                <div class="ba-label">After</div>
-                                <div class="ba-value after">100% Labeled</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Slide 7: Collaboration -->
-        <section class="slide" id="collaboration">
-            <div class="slide-content">
-                <div class="section-header">
-                    <span class="section-number">06 / Collaboration</span>
-                    <h2 class="section-title">Working with the Team</h2>
-                    <p class="section-desc">
-                        I collaborated closely with the Marketing Director and Web Developer throughout the project, bridging research insights with implementation.
-                    </p>
-                </div>
-
-                <div class="collab-grid">
-                    <div class="collab-card">
-                        <div class="collab-role">
-                            <span class="collab-role-dot coral"></span>
-                            My Responsibilities
-                        </div>
-                        <h3 class="collab-title">UX Researcher</h3>
-                        <ul class="collab-activities">
-                            <li>Planned and conducted all user research activities</li>
-                            <li>Performed competitive analysis and accessibility audits</li>
-                            <li>Synthesized findings into actionable insights</li>
-                            <li>Created user personas and journey maps</li>
-                            <li>Led usability testing sessions (5 participants)</li>
-                            <li>Provided research insights for Figma design iterations</li>
-                            <li>Presented findings and secured stakeholder buy-in</li>
-                        </ul>
-                    </div>
-                    <div class="collab-card">
-                        <div class="collab-role">
-                            <span class="collab-role-dot lavender"></span>
-                            Team Collaboration
-                        </div>
-                        <h3 class="collab-title">Cross-functional Work</h3>
-                        <ul class="collab-activities">
-                            <li>Weekly syncs with Marketing Director on project goals</li>
-                            <li>Shared research findings to inform marketing strategy</li>
-                            <li>Worked with Web Developer on technical feasibility</li>
-                            <li>Translated research into developer-friendly specs</li>
-                            <li>Connected accessibility to NISRA's mission for buy-in</li>
-                            <li>Demonstrated sign-up impact to secure approval</li>
-                        </ul>
-                    </div>
-                </div>
-
-                <div class="section-header" style="margin-top: 4rem;">
-                    <h3 class="section-title" style="font-size: 1.5rem;">Tools Used</h3>
-                </div>
-                <div class="tools-grid">
-                    <span class="tool-tag">Zoom</span>
-                    <span class="tool-tag">Google Survey</span>
-                    <span class="tool-tag">Figma</span>
-                    <span class="tool-tag">Optimal Workshop</span>
-                    <span class="tool-tag">Miro</span>
-                    <span class="tool-tag">WebAIM Contrast Checker</span>
-                    <span class="tool-tag">WAVE</span>
-                    <span class="tool-tag">Browser Dev Tools</span>
-                </div>
-            </div>
-        </section>
-
-        <!-- Slide 8: Results & Learnings -->
-        <section class="slide" id="results">
-            <div class="slide-content">
-                <div class="section-header">
-                    <span class="section-number">07 / Results & Learnings</span>
-                    <h2 class="section-title">Impact & Reflection</h2>
-                </div>
-
-                <div class="results-hero">
-                    <div class="results-stats">
-                        <div class="result-stat">
-                            <div class="result-stat-value coral">+20%</div>
-                            <div class="result-stat-label">Program Sign-ups</div>
-                        </div>
-                        <div class="result-stat">
-                            <div class="result-stat-value mint">85%</div>
-                            <div class="result-stat-label">Found Site Easier</div>
-                        </div>
-                        <div class="result-stat">
-                            <div class="result-stat-value lavender">100%</div>
-                            <div class="result-stat-label">WCAG Compliant</div>
-                        </div>
-                    </div>
-
-                    <div class="results-feedback">
-                        <div class="feedback-card">
-                            <p class="feedback-text">"The larger text made everything easier to read."</p>
-                            <p class="feedback-source">— Post-launch user feedback</p>
-                        </div>
-                        <div class="feedback-card">
-                            <p class="feedback-text">"I was finally able to sign up without needing help."</p>
-                            <p class="feedback-source">— Post-launch user feedback</p>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="section-header" style="margin-top: 4rem;">
-                    <h3 class="section-title" style="font-size: 1.5rem;">Key Learnings</h3>
-                </div>
-
-                <div class="learnings-grid">
-                    <div class="learning-card">
-                        <div class="learning-icon">💡</div>
-                        <h4 class="learning-title">User Feedback Drives Design</h4>
-                        <p class="learning-desc">Direct observation of users struggling with tasks provided the most compelling evidence for change.</p>
-                    </div>
-                    <div class="learning-card">
-                        <div class="learning-icon">📊</div>
-                        <h4 class="learning-title">Accessibility = Engagement</h4>
-                        <p class="learning-desc">Accessibility improvements directly correlated with increased sign-ups and user satisfaction.</p>
-                    </div>
-                    <div class="learning-card">
-                        <div class="learning-icon">🔄</div>
-                        <h4 class="learning-title">Iteration is Essential</h4>
-                        <p class="learning-desc">Multiple rounds of testing revealed issues the first round missed, improving final quality.</p>
-                    </div>
-                </div>
-
-                <div class="section-header" style="margin-top: 4rem;">
-                    <h3 class="section-title" style="font-size: 1.5rem;">What I'd Do Differently</h3>
-                </div>
-
-                <div class="learnings-grid">
-                    <div class="learning-card">
-                        <div class="learning-icon">👥</div>
-                        <h4 class="learning-title">Larger Sample</h4>
-                        <p class="learning-desc">Test with more participants across various types of visual impairments for broader coverage.</p>
-                    </div>
-                    <div class="learning-card">
-                        <div class="learning-icon">🔧</div>
-                        <h4 class="learning-title">Multiple AT Testing</h4>
-                        <p class="learning-desc">Validate with JAWS, NVDA, VoiceOver and other screen readers for compatibility.</p>
-                    </div>
-                    <div class="learning-card">
-                        <div class="learning-icon">🤝</div>
-                        <h4 class="learning-title">Expert Partnership</h4>
-                        <p class="learning-desc">Include accessibility specialists for validation beyond WCAG minimums.</p>
-                    </div>
-                </div>
-            </div>
-        </section>
-    </div>
-
-    <script>
-        // Intersection Observer for slide animations
-        const slides = document.querySelectorAll('.slide');
-        const dots = document.querySelectorAll('.slide-dot');
-        const navLinks = document.querySelectorAll('.nav-link');
-
-        const observerOptions = {
-            threshold: 0.3,
-            rootMargin: '-50px'
-        };
-
-        const slideObserver = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add('visible');
-                    
-                    // Update nav dots
-                    const slideIndex = Array.from(slides).indexOf(entry.target);
-                    dots.forEach((dot, index) => {
-                        dot.classList.toggle('active', index === slideIndex);
-                    });
-
-                    // Update nav links
-                    const sectionId = entry.target.id;
-                    navLinks.forEach(link => {
-                        const href = link.getAttribute('href');
-                        link.classList.toggle('active', href === `#${sectionId}`);
-                    });
-                }
-            });
-        }, observerOptions);
-
-        slides.forEach(slide => slideObserver.observe(slide));
-
-        // Dot navigation
-        dots.forEach(dot => {
-            dot.addEventListener('click', () => {
-                const slideIndex = parseInt(dot.dataset.slide);
-                slides[slideIndex].scrollIntoView({ behavior: 'smooth' });
-            });
-        });
-
-        // Smooth scroll for nav links
-        navLinks.forEach(link => {
-            link.addEventListener('click', (e) => {
-                e.preventDefault();
-                const targetId = link.getAttribute('href');
-                document.querySelector(targetId).scrollIntoView({ behavior: 'smooth' });
-            });
-        });
-
-        // Keyboard navigation
-        document.addEventListener('keydown', (e) => {
-            const currentSlide = Array.from(slides).findIndex(slide => 
-                slide.getBoundingClientRect().top >= -100 && 
-                slide.getBoundingClientRect().top <= window.innerHeight / 2
-            );
-
-            if (e.key === 'ArrowDown' || e.key === 'PageDown') {
-                e.preventDefault();
-                if (currentSlide < slides.length - 1) {
-                    slides[currentSlide + 1].scrollIntoView({ behavior: 'smooth' });
-                }
-            } else if (e.key === 'ArrowUp' || e.key === 'PageUp') {
-                e.preventDefault();
-                if (currentSlide > 0) {
-                    slides[currentSlide - 1].scrollIntoView({ behavior: 'smooth' });
-                }
-            }
-        });
-
-        // Add stagger animation to cards
-        const animateCards = () => {
-            const cards = document.querySelectorAll('.overview-card, .challenge-card, .method-card, .solution-card, .learning-card');
-            cards.forEach((card, index) => {
-                card.style.transitionDelay = `${index * 0.1}s`;
-            });
-        };
-
-        animateCards();
-    </script>
 </body>
 </html>
