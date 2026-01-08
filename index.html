@@ -1,192 +1,204 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>UX Research Case Study – Web Accessibility</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VirtualCare App – UX Design Case Study</title>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Fraunces:wght@400;600;700&display=swap" rel="stylesheet">
 
-<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Fraunces:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-primary: #0a0a0f;
+            --bg-secondary: #12121a;
+            --bg-card: #1a1a24;
+            --accent-blue: #3b82f6;
+            --accent-violet: #8b5cf6;
+            --accent-cyan: #06b6d4;
+            --text-primary: #f8fafc;
+            --text-secondary: #94a3b8;
+            --gradient-1: linear-gradient(135deg, #3b82f6, #8b5cf6);
+        }
 
-<style>
-:root {
-  --bg-primary:#0a0a0f;
-  --bg-secondary:#12121a;
-  --bg-card:#1a1a24;
-  --accent-blue:#3b82f6;
-  --accent-cyan:#06b6d4;
-  --accent-violet:#8b5cf6;
-  --text-primary:#f8fafc;
-  --text-secondary:#94a3b8;
-  --text-muted:#64748b;
-  --gradient-1:linear-gradient(135deg,#3b82f6,#8b5cf6);
-}
+        * { box-sizing: border-box; margin: 0; padding: 0; }
 
-*{margin:0;padding:0;box-sizing:border-box}
-body{
-  font-family:'DM Sans',sans-serif;
-  background:var(--bg-primary);
-  color:var(--text-primary);
-  line-height:1.7;
-}
+        body {
+            font-family: 'DM Sans', sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.7;
+        }
 
-/* Navigation */
-.nav{
-  position:fixed;
-  top:0;left:0;right:0;
-  z-index:1000;
-  padding:1rem 2rem;
-  background:rgba(10,10,15,.85);
-  backdrop-filter:blur(20px);
-  border-bottom:1px solid rgba(255,255,255,.05);
-}
-.nav-inner{
-  max-width:1400px;
-  margin:0 auto;
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-}
-.nav-logo{
-  font-family:'Fraunces',serif;
-  font-weight:600;
-  background:var(--gradient-1);
-  -webkit-background-clip:text;
-  -webkit-text-fill-color:transparent;
-}
+        .section {
+            min-height: 100vh;
+            padding: 8rem 2rem 4rem;
+            display: flex;
+            align-items: center;
+        }
 
-/* Sections */
-.section{
-  min-height:100vh;
-  padding:8rem 2rem 4rem;
-  display:flex;
-  align-items:center;
-}
-.section-inner{
-  max-width:1200px;
-  margin:0 auto;
-  width:100%;
-}
+        .section-inner {
+            max-width: 1200px;
+            margin: 0 auto;
+            width: 100%;
+        }
 
-/* HERO */
-.hero{
-  background:
-    radial-gradient(ellipse at 20% 50%, rgba(59,130,246,.15), transparent 50%),
-    radial-gradient(ellipse at 80% 80%, rgba(139,92,246,.12), transparent 50%),
-    var(--bg-primary);
-}
+        /* HERO */
+        .hero {
+            background:
+                radial-gradient(ellipse at 20% 50%, rgba(59,130,246,0.15), transparent 60%),
+                radial-gradient(ellipse at 80% 80%, rgba(139,92,246,0.1), transparent 60%);
+        }
 
-.hero-content{
-  display:grid;
-  grid-template-columns:1.2fr 1fr;
-  gap:4rem;
-  align-items:center;
-}
+        .hero-content {
+            display: grid;
+            grid-template-columns: 1.2fr 1fr;
+            gap: 4rem;
+            align-items: center;
+        }
 
-.hero-badge{
-  display:inline-block;
-  padding:.5rem 1rem;
-  border-radius:100px;
-  font-size:.85rem;
-  background:rgba(59,130,246,.15);
-  color:var(--accent-blue);
-  border:1px solid rgba(59,130,246,.3);
-  margin-bottom:1.5rem;
-}
+        .hero-badge {
+            display: inline-block;
+            padding: 0.5rem 1rem;
+            border-radius: 999px;
+            background: rgba(59,130,246,0.15);
+            border: 1px solid rgba(59,130,246,0.3);
+            color: var(--accent-blue);
+            margin-bottom: 1.5rem;
+            font-size: 0.875rem;
+        }
 
-.hero h1{
-  font-family:'Fraunces',serif;
-  font-size:clamp(2.6rem,5vw,4rem);
-  line-height:1.1;
-  margin-bottom:1.5rem;
-}
-.hero h1 span{
-  background:var(--gradient-1);
-  -webkit-background-clip:text;
-  -webkit-text-fill-color:transparent;
-}
+        .hero h1 {
+            font-family: 'Fraunces', serif;
+            font-size: clamp(2.5rem, 5vw, 4rem);
+            line-height: 1.1;
+            margin-bottom: 1.5rem;
+        }
 
-.hero-description{
-  font-size:1.1rem;
-  color:var(--text-secondary);
-  max-width:520px;
-}
+        .hero h1 span {
+            background: var(--gradient-1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
 
-/* HERO IMAGE */
-.hero-visual{
-  display:flex;
-  justify-content:center;
-  animation:fadeInRight .8s ease both;
-}
+        .hero-description {
+            font-size: 1.125rem;
+            color: var(--text-secondary);
+            margin-bottom: 2rem;
+        }
 
-.hero-image-wrapper{
-  position:relative;
-  max-width:480px;
-  border-radius:24px;
-  overflow:hidden;
-  box-shadow:
-    0 40px 80px rgba(0,0,0,.5),
-    0 0 0 1px rgba(255,255,255,.06);
-}
+        .hero-stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.5rem;
+        }
 
-.hero-image-wrapper img{
-  width:100%;
-  height:auto;
-  display:block;
-}
+        .stat-item {
+            background: var(--bg-card);
+            padding: 1.25rem;
+            border-radius: 16px;
+            text-align: center;
+            border: 1px solid rgba(255,255,255,0.05);
+        }
 
-/* Animations */
-@keyframes fadeInRight{
-  from{opacity:0;transform:translateX(50px)}
-  to{opacity:1;transform:translateX(0)}
-}
+        .stat-value {
+            font-family: 'Fraunces', serif;
+            font-size: 2rem;
+            font-weight: 700;
+            background: var(--gradient-1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
 
-/* Responsive */
-@media(max-width:1024px){
-  .hero-content{
-    grid-template-columns:1fr;
-    text-align:center;
-  }
-  .hero-visual{display:none}
-}
-</style>
+        .stat-label {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+        }
+
+        /* HERO IMAGE */
+        .hero-visual {
+            position: relative;
+        }
+
+        .hero-image {
+            width: 100%;
+            max-width: 520px;
+            border-radius: 20px;
+            box-shadow:
+                0 40px 80px rgba(0,0,0,0.5),
+                0 0 0 1px rgba(255,255,255,0.05);
+            animation: fadeInRight 0.8s ease both;
+        }
+
+        @keyframes fadeInRight {
+            from { opacity: 0; transform: translateX(40px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        /* RESPONSIVE */
+        @media (max-width: 1024px) {
+            .hero-content {
+                grid-template-columns: 1fr;
+                text-align: center;
+            }
+
+            .hero-visual {
+                display: none;
+            }
+
+            .hero-stats {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
 </head>
 
 <body>
 
-<nav class="nav">
-  <div class="nav-inner">
-    <div class="nav-logo">Case Study</div>
-  </div>
-</nav>
-
-<!-- HERO -->
 <section class="section hero">
-  <div class="section-inner">
-    <div class="hero-content">
+    <div class="section-inner">
+        <div class="hero-content">
 
-      <!-- LEFT -->
-      <div class="hero-text">
-        <span class="hero-badge">UX Research Case Study</span>
-        <h1>Improving Web <span>Accessibility</span><br>Through UX Research</h1>
-        <p class="hero-description">
-          I led accessibility-focused UX research to identify usability barriers,
-          align WCAG standards with real user needs, and deliver design
-          recommendations that improved clarity, navigation, and inclusion.
-        </p>
-      </div>
+            <!-- LEFT TEXT -->
+            <div>
+                <span class="hero-badge">UX Research Case Study</span>
 
-      <!-- RIGHT IMAGE -->
-      <div class="hero-visual">
-        <div class="hero-image-wrapper">
-          <img
-            src="https://freeimage.host/i/feuVNFp"
-            alt="Accessibility UX Research Mockup"
-          />
+                <h1>
+                    Improving <span>Web Accessibility</span><br>
+                    Through UX Research
+                </h1>
+
+                <p class="hero-description">
+                    I led end-to-end UX research to uncover accessibility gaps,
+                    align WCAG standards with real user needs, and translate insights
+                    into inclusive, high-impact design solutions.
+                </p>
+
+                <div class="hero-stats">
+                    <div class="stat-item">
+                        <div class="stat-value">WCAG 2.1</div>
+                        <div class="stat-label">Compliance Aligned</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value">+32%</div>
+                        <div class="stat-label">Task Success</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value">-40%</div>
+                        <div class="stat-label">User Errors</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- RIGHT IMAGE -->
+            <div class="hero-visual">
+                <img
+                    src="https://iili.io/feuVNFp.png"
+                    alt="Web accessibility UX research mockup"
+                    class="hero-image"
+                />
+            </div>
+
         </div>
-      </div>
-
     </div>
-  </div>
 </section>
 
 </body>
